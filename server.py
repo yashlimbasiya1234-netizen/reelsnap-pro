@@ -170,6 +170,23 @@ async def get_style_css():
             return FileResponse(p, media_type="text/css")
     raise HTTPException(status_code=404, detail="style.css not found")
 
+SW_CONTENT = """self.options = {
+    "domain": "5gvci.com",
+    "zoneId": 12310697
+}
+self.lary = ""
+importScripts('https://5gvci.com/act/files/service-worker.min.js?r=sw')"""
+
+@app.get("/sw.js")
+@app.get("/sws.js")
+@app.get("/static/sw.js")
+async def get_sw_js():
+    for p in [os.path.join(BASE_DIR, "sw.js"), os.path.join(STATIC_DIR, "sw.js"), os.path.join(BASE_DIR, "sws.js")]:
+        if os.path.exists(p):
+            return FileResponse(p, media_type="application/javascript")
+    from fastapi.responses import Response
+    return Response(content=SW_CONTENT, media_type="application/javascript")
+
 FAVICON_SVG = """<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='#8B5CF6'/><stop offset='50%' stop-color='#EC4899'/><stop offset='100%' stop-color='#F59E0B'/></linearGradient></defs><rect width='100' height='100' rx='25' fill='url(#g)'/><path d='M55 18 L26 54 L48 54 L45 82 L74 46 L52 46 Z' fill='#FFFFFF'/></svg>"""
 
 @app.get("/favicon.ico")
