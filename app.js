@@ -697,21 +697,42 @@ function renderUserAccount() {
     if (window.lucide) lucide.createIcons();
 }
 
-// 1-Click Google Sign-In
-async function loginWithGoogle() {
-    let googleEmail = prompt("Enter your Google Account email (e.g. user@gmail.com):");
-    if (!googleEmail || !googleEmail.includes("@")) {
-        googleEmail = `google_user_${Math.floor(1000 + Math.random() * 9000)}@gmail.com`;
+// Official Google Sign-In Modals & Actions
+function openGoogleModal() {
+    const modal = document.getElementById("google-signin-modal");
+    if (modal) modal.classList.remove("hidden");
+    if (window.lucide) lucide.createIcons();
+}
+
+function closeGoogleModal() {
+    const modal = document.getElementById("google-signin-modal");
+    if (modal) modal.classList.add("hidden");
+}
+
+function loginWithGoogle() {
+    openGoogleModal();
+}
+
+async function executeGoogleLogin(email, name) {
+    if (!email) return;
+    if (!name) name = email.split("@")[0].replace(/[^a-zA-Z0-9]/g, " ").trim() || "Google User";
+
+    const submitBtn = document.getElementById("google-submit-btn");
+    if (submitBtn) {
+        submitBtn.innerHTML = `
+            <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <span>Signing in...</span>
+        `;
+        submitBtn.disabled = true;
     }
-    const googleName = googleEmail.split("@")[0].replace(/[^a-zA-Z0-9]/g, " ").trim() || "Google User";
 
     try {
         const res = await fetch("/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                email: googleEmail,
-                name: googleName,
+                email: email,
+                name: name,
                 provider: "Google"
             })
         });
@@ -723,23 +744,38 @@ async function loginWithGoogle() {
             user.isLoggedIn = true;
             user.provider = "Google";
             saveUserSession(user);
-
-            renderUserAccount();
-            closeAuthModal();
-            showToast(`🌐 Signed in with Google as ${data.user.email}!`);
         }
     } catch (e) {
         // Fallback offline session
         const user = getUserSession();
-        user.email = googleEmail;
-        user.name = googleName;
+        user.email = email;
+        user.name = name;
         user.isLoggedIn = true;
         user.provider = "Google";
         saveUserSession(user);
-        renderUserAccount();
-        closeAuthModal();
-        showToast(`🌐 Signed in with Google as ${googleEmail}!`);
     }
+
+    if (submitBtn) {
+        submitBtn.innerHTML = `<span>Continue with Google →</span>`;
+        submitBtn.disabled = false;
+    }
+
+    closeGoogleModal();
+    const authModal = document.getElementById("auth-modal");
+    if (authModal) authModal.classList.add("hidden");
+    document.body.style.overflow = "";
+    renderUserAccount();
+    showToast(`🌐 Welcome, ${name}! Signed in via Google.`);
+}
+
+function handleCustomGoogleLogin(e) {
+    e.preventDefault();
+    const emailInput = document.getElementById("google-custom-email");
+    const nameInput = document.getElementById("google-custom-name");
+    const email = emailInput ? emailInput.value.trim() : "";
+    const name = nameInput ? nameInput.value.trim() : "";
+    if (!email) return;
+    executeGoogleLogin(email, name);
 }
 
 // Auth Handlers
