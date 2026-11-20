@@ -5,8 +5,8 @@ let siteConfig = {
     download_countdown_seconds: 4,
     adsense_client_id: "ca-pub-XXXXXXXXXXXXXXXX",
     custom_ad_script: "",
-    upi_id: "yourname@upi",
-    upi_name: "ReelSnap Pro"
+    upi_id: "yashlimbasiya1234-2@okaxis",
+    upi_name: "Yash Limbasiya"
 };
 
 let currentDownloadUrl = "";
@@ -425,9 +425,10 @@ function selectPlanPayment(planName, amount) {
 }
 
 function updatePaymentQr() {
-    const upi = siteConfig.upi_id || "yourname@upi";
-    const amount = selectedPaymentPlan.amount || 99;
-    const upiUri = `upi://pay?pa=${encodeURIComponent(upi)}&pn=ReelSnap&am=${amount}&cu=INR&tn=${encodeURIComponent(selectedPaymentPlan.name)}`;
+    const upi = siteConfig.upi_id || "yashlimbasiya1234-2@okaxis";
+    const name = siteConfig.upi_name || "Yash Limbasiya";
+    const amount = selectedPaymentPlan.amount || 49;
+    const upiUri = `upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tn=${encodeURIComponent(selectedPaymentPlan.name)}`;
 
     const qrImg = document.getElementById("dynamic-upi-qr");
     const modalUpi = document.getElementById("modal-upi-id");

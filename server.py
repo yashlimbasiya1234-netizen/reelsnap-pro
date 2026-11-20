@@ -41,7 +41,8 @@ def load_config():
         "site_name": "ReelSnap Pro",
         "ads_enabled": True,
         "adsense_client_id": "ca-pub-XXXXXXXXXXXXXXXX",
-        "upi_id": "yourname@upi",
+        "upi_id": "yashlimbasiya1234-2@okaxis",
+        "upi_name": "Yash Limbasiya",
         "vip_access_keys": ["VIP2026", "PREMIUM100", "REELPRO", "EARNMONEY"]
     }
 

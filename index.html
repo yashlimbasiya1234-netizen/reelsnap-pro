@@ -40,7 +40,8 @@
     <!-- Canvas Confetti for VIP celebration -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/style.css?v=20261121_1">
+    <link rel="stylesheet" href="/static/style.css?v=20261121_1">
 </head>
 <body class="bg-[#080B14] text-slate-100 min-h-screen relative selection:bg-purple-500 selection:text-white">
 
@@ -699,8 +700,8 @@
     </div>
 
     <!-- VIP Checkout / Upgrade Modal -->
-    <div id="vip-modal" onclick="if(event.target === this) closeVipModal()" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="z-index: 99999;">
-        <div class="modal-solid-card p-6 sm:p-7 max-w-md w-full relative max-h-[88vh] overflow-y-auto">
+    <div id="vip-modal" onclick="if(event.target === this) closeVipModal()" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="background: rgba(3, 7, 18, 0.96) !important; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); z-index: 99999;">
+        <div class="p-6 sm:p-7 max-w-md w-full relative max-h-[88vh] overflow-y-auto rounded-3xl border border-amber-500/40 shadow-2xl" style="background-color: #0b1120 !important; background: #0b1120 !important; opacity: 1 !important; box-shadow: 0 25px 60px -15px rgba(0,0,0,1), 0 0 35px -5px rgba(245,158,11,0.3);">
             <button onclick="closeVipModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-all z-10" title="Close">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
@@ -745,15 +746,16 @@
                 <!-- UPI QR Code Box -->
                 <div class="p-4 rounded-xl bg-white/5 border border-white/10 text-center space-y-3">
                     <div class="w-36 h-36 bg-white p-2 rounded-xl mx-auto flex items-center justify-center shadow-lg">
-                        <img id="dynamic-upi-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=yourname@upi&pn=ReelSnap&am=99&cu=INR" alt="UPI QR" class="w-full h-full object-contain">
+                        <img id="dynamic-upi-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=yashlimbasiya1234-2@okaxis&pn=Yash%20Limbasiya&am=49&cu=INR" alt="UPI QR" class="w-full h-full object-contain">
                     </div>
                     <div>
-                        <p class="text-xs text-slate-300 font-semibold">Scan to Pay <span class="text-amber-400 font-bold" id="pay-amount-display">₹99</span></p>
-                        <p class="text-[11px] text-slate-400 mt-0.5">UPI ID: <span class="font-mono text-amber-400 font-bold" id="modal-upi-id">yourname@upi</span></p>
+                        <p class="text-xs text-slate-300 font-semibold">Scan to Pay <span class="text-amber-400 font-bold" id="pay-amount-display">₹49</span></p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">UPI ID: <span class="font-mono text-amber-400 font-bold" id="modal-upi-id">yashlimbasiya1234-2@okaxis</span></p>
+                        <p class="text-[10px] text-emerald-400 font-bold mt-0.5">Verified Payee: Yash Limbasiya</p>
                     </div>
 
                     <!-- Direct App Pay Button for Mobile Users -->
-                    <a id="direct-upi-link" href="upi://pay?pa=yourname@upi&pn=ReelSnap&am=99&cu=INR" class="block w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg transition-all">
+                    <a id="direct-upi-link" href="upi://pay?pa=yashlimbasiya1234-2@okaxis&pn=Yash%20Limbasiya&am=49&cu=INR" class="block w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg transition-all">
                         📲 Pay Directly in GPay / PhonePe / Paytm
                     </a>
                 </div>
