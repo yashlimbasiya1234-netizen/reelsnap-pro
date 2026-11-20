@@ -658,8 +658,8 @@
     </div>
 
     <!-- Interstitial Ad & Countdown Modal (High Revenue Ad Impression) -->
-    <div id="countdown-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
-        <div class="glass-panel p-6 max-w-md w-full relative border-purple-500/40 text-center space-y-4 glow-primary">
+    <div id="countdown-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="z-index: 99999;">
+        <div class="modal-solid-card p-6 max-w-md w-full relative border-purple-500/40 text-center space-y-4 glow-primary">
             <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-purple-500/20 text-purple-400 font-black text-2xl brand-font mx-auto" id="countdown-timer-num">
                 3
             </div>
@@ -699,9 +699,9 @@
     </div>
 
     <!-- VIP Checkout / Upgrade Modal -->
-    <div id="vip-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="z-index: 99999;">
-        <div class="glass-panel p-6 sm:p-8 max-w-md w-full relative border-amber-500/30">
-            <button onclick="closeVipModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+    <div id="vip-modal" onclick="if(event.target === this) closeVipModal()" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="z-index: 99999;">
+        <div class="modal-solid-card p-6 sm:p-7 max-w-md w-full relative max-h-[88vh] overflow-y-auto">
+            <button onclick="closeVipModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-all z-10" title="Close">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
 
@@ -803,8 +803,8 @@
     </div>
 
     <!-- Admin & AdSense Settings Modal (Now with Orders Viewer) -->
-    <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
-        <div class="glass-panel p-6 max-w-lg w-full relative border-purple-500/30 max-h-[90vh] overflow-y-auto">
+    <div id="settings-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="z-index: 99999;">
+        <div class="modal-solid-card p-6 max-w-lg w-full relative border-purple-500/30 max-h-[90vh] overflow-y-auto">
             <button onclick="closeSettingsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
@@ -914,8 +914,8 @@
     </div>
 
     <!-- Legal & Policy Modal (Compliant for Google AdSense & Ad Networks) -->
-    <div id="legal-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
-        <div class="glass-panel p-6 sm:p-8 max-w-2xl w-full relative border-white/10 max-h-[85vh] overflow-y-auto">
+    <div id="legal-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="z-index: 99999;">
+        <div class="modal-solid-card p-6 sm:p-8 max-w-2xl w-full relative border-white/10 max-h-[85vh] overflow-y-auto">
             <button onclick="closeLegalModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
@@ -974,7 +974,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="/app.js?v=20261120_3"></script>
+    <script src="/app.js?v=20261120_4"></script>
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
