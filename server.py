@@ -328,6 +328,9 @@ async def extract_reel(request: Request):
         "type": "audio/mpeg"
     }
 
+    encoded_video = urllib.parse.quote(info["video_url"] or "")
+    encoded_audio = urllib.parse.quote(info.get("audio_url") or info["video_url"] or "")
+
     return {
         "success": True,
         "id": info["id"],
@@ -340,21 +343,21 @@ async def extract_reel(request: Request):
                 "label": "1080p Full HD (Original)",
                 "format": "MP4",
                 "badge": "Recommended",
-                "download_url": f"/api/download?id={shortcode}&format=1080p",
+                "download_url": f"/api/download?id={shortcode}&format=1080p&url={encoded_video}",
                 "direct_url": info["video_url"]
             },
             {
                 "label": "720p HD (Fast Download)",
                 "format": "MP4",
                 "badge": "Fast",
-                "download_url": f"/api/download?id={shortcode}&format=720p",
+                "download_url": f"/api/download?id={shortcode}&format=720p&url={encoded_video}",
                 "direct_url": info["video_url"]
             },
             {
                 "label": "Audio Only (Studio Quality)",
                 "format": "MP3",
                 "badge": "Audio",
-                "download_url": f"/api/download?id={shortcode}&format=audio",
+                "download_url": f"/api/download?id={shortcode}&format=audio&url={encoded_audio}",
                 "direct_url": info.get("audio_url") or info["video_url"]
             }
         ]

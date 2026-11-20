@@ -228,23 +228,26 @@ function renderResult(data) {
                 </div>
             </div>
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                <button 
-                    type="button"
-                    onclick="triggerAdOrDownload('${q.download_url}')"
-                    class="px-4 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 ${btnClass} transition-all grow sm:grow-0"
+                <a 
+                    href="${q.download_url}" 
+                    download="ReelSnap_${data.id}_${q.format.toLowerCase()}"
+                    onclick="showToast('⚡ Starting high-speed file download...')"
+                    class="px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 ${btnClass} transition-all grow sm:grow-0 shadow-lg cursor-pointer text-white"
                 >
-                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                    <span>Download</span>
-                </button>
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>Download (${q.format})</span>
+                </a>
                 ${q.direct_url ? `
                 <a 
                     href="${q.direct_url}" 
                     target="_blank" 
                     rel="noreferrer"
-                    title="Alternative Direct Server Link"
-                    class="p-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10"
+                    download="Instagram_${data.id}.mp4"
+                    title="Direct Instagram CDN Video Stream"
+                    class="px-3 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white bg-white/10 hover:bg-white/15 border border-white/10 flex items-center gap-1.5 transition-all"
                 >
                     <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                    <span>Mirror Link</span>
                 </a>
                 ` : ''}
             </div>
@@ -290,8 +293,18 @@ function triggerAdOrDownload(downloadUrl) {
             skipBtn.innerHTML = `<span>Wait ${timeLeft}s</span>`;
         } else {
             clearInterval(countdownTimer);
-            modal.classList.add("hidden");
+            timerNum.innerHTML = `<i data-lucide="check" class="w-7 h-7 text-emerald-400"></i>`;
+            skipBtn.innerHTML = `
+                <a href="${currentDownloadUrl}" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-500/25 transition-all">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>Download File Now</span>
+                </a>
+            `;
+            if (window.lucide) lucide.createIcons();
             startRealDownload(currentDownloadUrl);
+            setTimeout(() => {
+                modal.classList.add("hidden");
+            }, 3500);
         }
     }, 1000);
 }
@@ -304,12 +317,21 @@ function skipCountdownNow() {
 
 function startRealDownload(url) {
     showToast("⚡ Starting high-speed file download...");
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    try {
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "ReelSnap_Instagram_Video.mp4";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => a.remove(), 1000);
+    } catch (e) {
+        console.error("Anchor click failed:", e);
+    }
+
+    // Direct browser download trigger (guaranteed not blocked by browser security)
+    setTimeout(() => {
+        window.location.href = url;
+    }, 400);
 }
 
 // Reset Downloader
