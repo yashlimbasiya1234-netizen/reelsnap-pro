@@ -1,5 +1,9 @@
-// State Management - By default start as Free User so Ads are visible!
-let isVipUser = localStorage.getItem("reelsnap_vip") === "true" ? false : false; // Default to Free Mode so owner sees Ads!
+// State Management - Always start as Free User so Ads are 100% visible!
+let isVipUser = false;
+try {
+    localStorage.removeItem("reelsnap_vip");
+} catch(e) {}
+
 let siteConfig = {
     ads_enabled: true,
     download_countdown_seconds: 4,
@@ -11,7 +15,7 @@ let siteConfig = {
 
 let currentDownloadUrl = "";
 let countdownTimer = null;
-let selectedPaymentPlan = { name: "Pro Monthly", amount: 299 };
+let selectedPaymentPlan = { name: "VIP Lifetime", amount: 1999 };
 
 // DOM Content Loaded
 document.addEventListener("DOMContentLoaded", () => {
@@ -56,52 +60,18 @@ function applyConfig() {
     }
 }
 
-// Toggle between Free Mode (With Ads) and VIP Mode (No Ads)
-function toggleUserMode() {
-    isVipUser = !isVipUser;
-    localStorage.setItem("reelsnap_vip", isVipUser ? "true" : "false");
-    checkVipStatus();
-    if (isVipUser) {
-        hideAllAds();
-        showToast("👑 VIP Mode Active: All ads are hidden!");
-    } else {
-        showAllAds();
-        showToast("👁️ Free Mode Active: All Ads & Countdown are visible!");
-    }
-}
-
 function checkVipStatus() {
     const vipContainer = document.getElementById("vip-status-container");
-    const modeLabel = document.getElementById("user-mode-label");
-    const modeBtn = document.getElementById("user-mode-btn");
-
-    if (isVipUser) {
-        hideAllAds();
-        if (modeLabel) modeLabel.innerText = "Mode: VIP (Ads Hidden)";
-        if (modeBtn) modeBtn.className = "px-3 py-1.5 rounded-full text-xs font-bold bg-amber-500/15 border border-amber-500/40 text-amber-300 flex items-center gap-1.5 transition-all";
-        if (vipContainer) {
-            vipContainer.innerHTML = `
-                <div class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/20 border border-amber-500/50 text-amber-300 flex items-center gap-1.5 shadow-lg shadow-amber-500/10">
-                    <i data-lucide="crown" class="w-4 h-4 fill-amber-400 text-amber-400"></i>
-                    <span>VIP Active</span>
-                </div>
-            `;
-            if (window.lucide) lucide.createIcons();
-        }
-    } else {
-        showAllAds();
-        if (modeLabel) modeLabel.innerText = "Mode: Free (Ads Visible)";
-        if (modeBtn) modeBtn.className = "px-3 py-1.5 rounded-full text-xs font-bold bg-purple-500/10 border border-purple-500/30 text-purple-300 flex items-center gap-1.5 transition-all";
-        if (vipContainer) {
-            vipContainer.innerHTML = `
-                <button onclick="openVipModal()" id="vip-badge-btn" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/15 border border-amber-500/30 hover:border-amber-500 text-amber-300 flex items-center gap-1.5 transition-all">
-                    <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400 fill-amber-400"></i>
-                    <span>Upgrade VIP</span>
-                </button>
-            `;
-            if (window.lucide) lucide.createIcons();
-        }
+    if (vipContainer) {
+        vipContainer.innerHTML = `
+            <button onclick="openVipModal('Lifetime VIP', 1999)" id="vip-badge-btn" class="px-4 py-2 rounded-full text-xs font-bold bg-amber-500/15 border border-amber-500/40 hover:border-amber-400 text-amber-300 flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/10">
+                <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400 fill-amber-400"></i>
+                <span>Upgrade VIP</span>
+            </button>
+        `;
+        if (window.lucide) lucide.createIcons();
     }
+    showAllAds();
 }
 
 function showAllAds() {

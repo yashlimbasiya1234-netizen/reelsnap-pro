@@ -40,8 +40,7 @@
     <!-- Canvas Confetti for VIP celebration -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <link rel="stylesheet" href="/style.css?v=20261121_1">
-    <link rel="stylesheet" href="/static/style.css?v=20261121_1">
+    <link rel="stylesheet" href="/style.css?v=20261121_FINAL_ADS">
 </head>
 <body class="bg-[#080B14] text-slate-100 min-h-screen relative selection:bg-purple-500 selection:text-white">
 
@@ -77,15 +76,9 @@
 
             <!-- Header Action Controls -->
             <div class="flex items-center gap-3">
-                <!-- Mode Switcher: Lets user easily toggle between seeing Ads (Free Mode) and Ad-Free (VIP Mode) -->
-                <button onclick="toggleUserMode()" id="user-mode-btn" class="px-3 py-1.5 rounded-full text-xs font-bold bg-purple-500/10 border border-purple-500/30 text-purple-300 hover:bg-purple-500/20 flex items-center gap-1.5 transition-all" title="Click to toggle between Free Mode (With Ads) and VIP Mode (No Ads)">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span id="user-mode-label">Mode: Free User (Ads ON)</span>
-                </button>
-
-                <!-- Status Badge -->
+                <!-- Status Badge / Upgrade VIP Button -->
                 <div id="vip-status-container" class="flex items-center">
-                    <button onclick="openVipModal()" id="vip-badge-btn" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/15 border border-amber-500/30 hover:border-amber-500 text-amber-300 flex items-center gap-1.5 transition-all">
+                    <button onclick="openVipModal()" id="vip-badge-btn" class="px-4 py-2 rounded-full text-xs font-bold bg-amber-500/15 border border-amber-500/40 hover:border-amber-400 text-amber-300 flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/10">
                         <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400 fill-amber-400"></i>
                         <span>Upgrade VIP</span>
                     </button>
@@ -639,17 +632,17 @@
     <div id="bottom-sticky-ad" class="fixed bottom-0 left-0 right-0 z-40 bg-[#0B0F19]/95 backdrop-blur-md border-t border-white/10 px-4 py-2.5 transition-all">
         <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <span class="text-[9px] uppercase px-1.5 py-0.5 rounded bg-white/10 text-slate-400 font-bold">Ad</span>
+                <span class="text-[9px] uppercase px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">VIP Promo</span>
                 <p class="text-xs text-slate-300 font-medium hidden sm:block">
-                    ⚡ Upgrade to VIP for just ₹99/mo to permanently remove all ads!
+                    ⚡ Upgrade to Lifetime VIP for ₹1,999 to permanently remove all ads forever!
                 </p>
                 <p class="text-xs text-slate-300 font-medium sm:hidden">
-                    ⚡ Remove all ads with VIP Pass!
+                    ⚡ Get Lifetime VIP (₹1,999) - 100% Ad-Free!
                 </p>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="openVipModal()" class="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs transition-all">
-                    Go Ad-Free
+                <button onclick="openVipModal('Lifetime VIP', '₹1999')" class="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs transition-all shadow-md shadow-amber-500/20">
+                    Get VIP (₹1,999)
                 </button>
                 <button onclick="closeAd('bottom-sticky-ad')" class="text-slate-400 hover:text-white text-xs p-1">
                     ✕
@@ -976,7 +969,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="/app.js?v=20261120_4"></script>
+    <script src="/app.js?v=20261121_FINAL_ADS"></script>
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
