@@ -699,7 +699,7 @@
     </div>
 
     <!-- VIP Checkout / Upgrade Modal -->
-    <div id="vip-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+    <div id="vip-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="z-index: 99999;">
         <div class="glass-panel p-6 sm:p-8 max-w-md w-full relative border-amber-500/30">
             <button onclick="closeVipModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
                 <i data-lucide="x" class="w-5 h-5"></i>
@@ -974,7 +974,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="/static/app.js"></script>
+    <script src="/app.js?v=20261120_3"></script>
     <script>
         // Initialize Lucide icons
         lucide.createIcons();

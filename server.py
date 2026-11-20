@@ -159,7 +159,7 @@ async def read_index():
 async def get_app_js():
     for p in [os.path.join(STATIC_DIR, "app.js"), os.path.join(BASE_DIR, "app.js")]:
         if os.path.exists(p):
-            return FileResponse(p, media_type="application/javascript")
+            return FileResponse(p, media_type="application/javascript", headers={"Cache-Control": "no-cache, must-revalidate"})
     raise HTTPException(status_code=404, detail="app.js not found")
 
 @app.get("/static/style.css")
@@ -167,7 +167,7 @@ async def get_app_js():
 async def get_style_css():
     for p in [os.path.join(STATIC_DIR, "style.css"), os.path.join(BASE_DIR, "style.css")]:
         if os.path.exists(p):
-            return FileResponse(p, media_type="text/css")
+            return FileResponse(p, media_type="text/css", headers={"Cache-Control": "no-cache, must-revalidate"})
     raise HTTPException(status_code=404, detail="style.css not found")
 
 SW_CONTENT = """self.options = {

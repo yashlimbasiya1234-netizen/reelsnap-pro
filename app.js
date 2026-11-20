@@ -355,23 +355,34 @@ function toggleFaq(num) {
 }
 
 // VIP Modal Handlers
-function openVipModal(planName = "Pro Monthly", price = "₹299") {
+window.openVipModal = function(planName = "Pro Monthly", price = "₹299") {
     const modal = document.getElementById("vip-modal");
+    if (!modal) return;
     modal.classList.remove("hidden");
+    modal.style.display = "flex";
 
     let numPrice = 299;
-    if (price.includes("49")) numPrice = 49;
-    if (price.includes("1999") || price.includes("1,999")) numPrice = 1999;
+    if (price && typeof price === "string") {
+        if (price.includes("49")) numPrice = 49;
+        if (price.includes("1999") || price.includes("1,999")) numPrice = 1999;
+    } else if (typeof price === "number") {
+        numPrice = price;
+    }
     selectPlanPayment(planName, numPrice);
 
     if (window.lucide) lucide.createIcons();
-}
+};
 
-function closeVipModal() {
-    document.getElementById("vip-modal").classList.add("hidden");
-    document.getElementById("vip-key-msg").innerText = "";
-    document.getElementById("upi-order-msg").innerText = "";
-}
+window.closeVipModal = function() {
+    const modal = document.getElementById("vip-modal");
+    if (!modal) return;
+    modal.classList.add("hidden");
+    modal.style.display = "none";
+    const kMsg = document.getElementById("vip-key-msg");
+    const uMsg = document.getElementById("upi-order-msg");
+    if (kMsg) kMsg.innerText = "";
+    if (uMsg) uMsg.innerText = "";
+};
 
 function switchVipTab(tab) {
     const btnKey = document.getElementById("tab-btn-key");
