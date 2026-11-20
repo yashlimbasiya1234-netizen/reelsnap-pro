@@ -170,6 +170,13 @@ async def get_style_css():
             return FileResponse(p, media_type="text/css")
     raise HTTPException(status_code=404, detail="style.css not found")
 
+FAVICON_SVG = """<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='#8B5CF6'/><stop offset='50%' stop-color='#EC4899'/><stop offset='100%' stop-color='#F59E0B'/></linearGradient></defs><rect width='100' height='100' rx='25' fill='url(#g)'/><path d='M55 18 L26 54 L48 54 L45 82 L74 46 L52 46 Z' fill='#FFFFFF'/></svg>"""
+
+@app.get("/favicon.ico")
+async def get_favicon():
+    from fastapi.responses import Response
+    return Response(content=FAVICON_SVG, media_type="image/svg+xml")
+
 ORDERS_FILE = os.path.join(BASE_DIR, "orders.json")
 
 def load_orders():
