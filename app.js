@@ -19,8 +19,9 @@ let selectedPaymentPlan = { name: "VIP Lifetime", amount: 1999 };
 
 // DOM Content Loaded
 document.addEventListener("DOMContentLoaded", () => {
+    initTheme();
     loadConfig();
-    showAllAds();
+    renderUserAccount();
     checkVipStatus();
     initStatsTicker();
 });
@@ -442,8 +443,16 @@ async function handleUpiProofSubmit(e) {
 
         const data = await res.json();
         if (data.success) {
-            localStorage.setItem("reelsnap_vip", "true");
-            isVipUser = true;
+            const user = getUserSession();
+            user.plan = selectedPaymentPlan.name || "VIP Lifetime";
+            if (selectedPaymentPlan.amount === 49) {
+                user.expiry = Date.now() + 24 * 60 * 60 * 1000; // 24 Hours
+            } else if (selectedPaymentPlan.amount === 299) {
+                user.expiry = Date.now() + 30 * 24 * 60 * 60 * 1000; // 30 Days
+            } else {
+                user.expiry = null; // Lifetime!
+            }
+            saveUserSession(user);
 
             msgEl.innerHTML = `<span class="text-emerald-400 font-bold">✓ Payment Received! VIP Activated.</span>`;
 
@@ -487,8 +496,11 @@ async function submitVipKey() {
         const data = await res.json();
 
         if (data.success) {
-            localStorage.setItem("reelsnap_vip", "true");
-            isVipUser = true;
+            const user = getUserSession();
+            user.plan = "VIP Lifetime";
+            user.expiry = null;
+            saveUserSession(user);
+
             msgEl.innerHTML = `<span class="text-emerald-400 font-bold">${data.message}</span>`;
             
             if (window.confetti) {
@@ -508,10 +520,180 @@ async function submitVipKey() {
     }
 }
 
+// Theme Manager (Dark Mode vs Light Mode)
+function initTheme() {
+    const savedTheme = localStorage.getItem("reelsnap_theme") || "dark";
+    if (savedTheme === "light") {
+        document.documentElement.classList.remove("dark");
+    } else {
+        document.documentElement.classList.add("dark");
+    }
+    updateThemeUI(savedTheme);
+}
+
+function toggleTheme() {
+    const isDark = document.documentElement.classList.contains("dark");
+    const newTheme = isDark ? "light" : "dark";
+    if (newTheme === "light") {
+        document.documentElement.classList.remove("dark");
+    } else {
+        document.documentElement.classList.add("dark");
+    }
+    localStorage.setItem("reelsnap_theme", newTheme);
+    updateThemeUI(newTheme);
+    showToast(newTheme === "light" ? "☀️ Light Mode Activated!" : "🌙 Dark Luxury Mode Activated!");
+}
+
+function updateThemeUI(theme) {
+    const lbl = document.getElementById("theme-label");
+    const btnText = document.getElementById("theme-toggle-btn-text");
+    const iconBox = document.getElementById("theme-icon-box");
+    if (!lbl || !btnText) return;
+
+    if (theme === "light") {
+        lbl.innerText = "Light Clean Mode";
+        btnText.innerText = "Switch to Dark Mode 🌙";
+        if (iconBox) iconBox.innerHTML = `<i data-lucide="sun" class="w-5 h-5 text-amber-500"></i>`;
+    } else {
+        lbl.innerText = "Dark Luxury Mode";
+        btnText.innerText = "Switch to Light Mode ☀️";
+        if (iconBox) iconBox.innerHTML = `<i data-lucide="moon" class="w-5 h-5 text-purple-400"></i>`;
+    }
+    if (window.lucide) lucide.createIcons();
+}
+
+// User Account & VIP Expiry Manager
+function getUserSession() {
+    try {
+        const stored = localStorage.getItem("reelsnap_user");
+        if (stored) return JSON.parse(stored);
+    } catch (e) {}
+    return {
+        email: "Guest User",
+        isLoggedIn: false,
+        plan: "Free Plan",
+        expiry: null
+    };
+}
+
+function saveUserSession(user) {
+    localStorage.setItem("reelsnap_user", JSON.stringify(user));
+    renderUserAccount();
+}
+
+function renderUserAccount() {
+    const user = getUserSession();
+    const emailEl = document.getElementById("settings-user-email");
+    const statusEl = document.getElementById("settings-user-status");
+    const authActions = document.getElementById("settings-auth-actions");
+    const vipBadge = document.getElementById("settings-vip-badge");
+    const vipExpiry = document.getElementById("settings-vip-expiry");
+    const vipBtnText = document.getElementById("settings-vip-btn-text");
+
+    let isVipActive = false;
+    let expiryText = "Free user with display ads. Upgrade to remove all ads & unlock 4K speeds!";
+
+    if (user.plan && user.plan !== "Free Plan") {
+        if (!user.expiry) {
+            isVipActive = true;
+            expiryText = "👑 Lifetime VIP Active: Unlimited 4K downloads & permanent ad-free experience!";
+        } else if (Date.now() < user.expiry) {
+            isVipActive = true;
+            const diffHours = Math.round((user.expiry - Date.now()) / (1000 * 60 * 60));
+            if (diffHours <= 24) {
+                const diffMin = Math.round((user.expiry - Date.now()) / (1000 * 60));
+                expiryText = `👑 ${user.plan} Active • Time Remaining: ${Math.floor(diffMin / 60)}h ${diffMin % 60}m`;
+            } else {
+                const diffDays = Math.ceil(diffHours / 24);
+                expiryText = `👑 ${user.plan} Active • Time Remaining: ${diffDays} Days`;
+            }
+        } else {
+            user.plan = "Free Plan";
+            user.expiry = null;
+            saveUserSession(user);
+            expiryText = "⚠️ Your VIP plan has expired. Please renew your VIP pass.";
+        }
+    }
+
+    isVipUser = isVipActive;
+    if (isVipUser) {
+        hideAllAds();
+    } else {
+        showAllAds();
+    }
+
+    if (emailEl) emailEl.innerText = user.email || "Guest User";
+    if (statusEl) statusEl.innerText = user.isLoggedIn ? "Signed In" : "Not logged in (Guest)";
+    if (vipBadge) {
+        vipBadge.innerText = user.plan || "Free Plan";
+        vipBadge.className = isVipActive 
+            ? "px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40"
+            : "px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-800 text-slate-300";
+    }
+    if (vipExpiry) vipExpiry.innerText = expiryText;
+    if (vipBtnText) vipBtnText.innerText = isVipActive ? "Manage / Extend VIP Plan" : "Add / Upgrade VIP Plan";
+
+    if (authActions) {
+        if (user.isLoggedIn) {
+            authActions.innerHTML = `
+                <button type="button" onclick="logoutUser()" class="w-full py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <span>Log Out (${user.email})</span>
+                </button>
+            `;
+        } else {
+            authActions.innerHTML = `
+                <button type="button" onclick="closeSettingsModal(); openAuthModal();" class="w-full py-2 rounded-xl bg-purple-600/30 hover:bg-purple-600/40 border border-purple-500/40 text-purple-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+                    <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
+                    <span>Sign In / Create Account</span>
+                </button>
+            `;
+        }
+    }
+    if (window.lucide) lucide.createIcons();
+}
+
+// Auth Handlers
+function openAuthModal() {
+    document.getElementById("auth-modal").classList.remove("hidden");
+    if (window.lucide) lucide.createIcons();
+}
+
+function closeAuthModal() {
+    document.getElementById("auth-modal").classList.add("hidden");
+}
+
+function handleAuthSubmit(e) {
+    e.preventDefault();
+    const email = document.getElementById("auth-email-input").value.trim();
+    if (!email) return;
+
+    const user = getUserSession();
+    user.email = email;
+    user.isLoggedIn = true;
+    saveUserSession(user);
+
+    closeAuthModal();
+    showToast(`🎉 Welcome, ${email}! Signed in successfully.`);
+    openSettingsModal();
+}
+
+function logoutUser() {
+    const user = {
+        email: "Guest User",
+        isLoggedIn: false,
+        plan: "Free Plan",
+        expiry: null
+    };
+    saveUserSession(user);
+    showToast("👋 You have been logged out.");
+    closeSettingsModal();
+}
+
 // Settings Modal
 function openSettingsModal() {
     document.getElementById("settings-modal").classList.remove("hidden");
-    fetchOrders();
+    renderUserAccount();
     if (window.lucide) lucide.createIcons();
 }
 

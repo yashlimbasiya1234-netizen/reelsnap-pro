@@ -220,8 +220,8 @@ async def get_config():
         "download_countdown_seconds": cfg.get("download_countdown_seconds", 4),
         "adsense_client_id": cfg.get("adsense_client_id", "ca-pub-XXXXXXXXXXXXXXXX"),
         "custom_ad_script": cfg.get("custom_ad_script", ""),
-        "upi_id": cfg.get("upi_id", "yourname@upi"),
-        "upi_name": cfg.get("upi_name", "ReelSnap Pro"),
+        "upi_id": "yashlimbasiya1234-2@okaxis",
+        "upi_name": "Yash Limbasiya",
         "pricing": cfg.get("pricing", {})
     }
 
@@ -236,8 +236,9 @@ async def update_config(data: dict):
         cfg["adsense_client_id"] = str(data["adsense_client_id"]).strip()
     if "custom_ad_script" in data:
         cfg["custom_ad_script"] = str(data["custom_ad_script"])
-    if "upi_id" in data:
-        cfg["upi_id"] = str(data["upi_id"]).strip()
+    # Locked permanently: upi_id and upi_name cannot be overwritten by client
+    cfg["upi_id"] = "yashlimbasiya1234-2@okaxis"
+    cfg["upi_name"] = "Yash Limbasiya"
     if "upi_name" in data:
         cfg["upi_name"] = str(data["upi_name"]).strip()
     save_config(cfg)

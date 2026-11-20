@@ -797,114 +797,127 @@
         </div>
     </div>
 
-    <!-- Admin & AdSense Settings Modal (Now with Orders Viewer) -->
-    <div id="settings-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="z-index: 99999;">
-        <div class="modal-solid-card p-6 max-w-lg w-full relative border-purple-500/30 max-h-[90vh] overflow-y-auto">
-            <button onclick="closeSettingsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+    <!-- User Settings Modal (Theme, VIP Plan, Account & Log Out) -->
+    <div id="settings-modal" onclick="if(event.target === this) closeSettingsModal()" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="background: rgba(3, 7, 18, 0.96) !important; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); z-index: 99999;">
+        <div class="p-6 sm:p-7 max-w-md w-full relative rounded-3xl border border-white/10 shadow-2xl" style="background-color: #0b1120 !important; background: #0b1120 !important;">
+            <button onclick="closeSettingsModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-all z-10" title="Close">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
 
-            <div class="mb-5">
-                <h3 class="text-xl font-bold brand-font text-white flex items-center gap-2">
-                    <i data-lucide="sliders" class="w-5 h-5 text-purple-400"></i> Website Monetization & Admin
-                </h3>
-                <p class="text-xs text-slate-400 mt-1">Configure your UPI ID, AdSense, and view customer payments</p>
+            <div class="mb-5 text-center">
+                <div class="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center mx-auto mb-2">
+                    <i data-lucide="sliders" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold brand-font text-white">Settings & Preferences</h3>
+                <p class="text-xs text-slate-400 mt-0.5">Customize display theme and manage your VIP membership</p>
             </div>
 
-            <!-- Admin Tabs -->
-            <div class="flex border-b border-white/10 mb-4 text-xs font-bold">
-                <button type="button" onclick="switchAdminTab('settings')" id="admin-tab-settings" class="flex-1 pb-2 border-b-2 border-purple-500 text-purple-400">
-                    Ads & UPI Settings
-                </button>
-                <button type="button" onclick="switchAdminTab('orders')" id="admin-tab-orders" class="flex-1 pb-2 text-slate-400 border-b-2 border-transparent">
-                    Received Payments (<span id="orders-count-badge">0</span>)
-                </button>
-            </div>
-
-            <!-- Admin Panel 1: Settings Form -->
-            <div id="admin-panel-settings">
-                <form onsubmit="handleSaveSettings(event)" class="space-y-4">
-                    <!-- Ads Toggle -->
-                    <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
-                        <div>
-                            <span class="text-sm font-bold text-white block">Display Ads (Monetization)</span>
-                            <span class="text-xs text-slate-400">Turn all ad spaces on or off</span>
+            <div class="space-y-4">
+                <!-- 1. Dark Mode / White Mode Toggle -->
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center" id="theme-icon-box">
+                            <i data-lucide="moon" class="w-5 h-5" id="theme-icon"></i>
                         </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="cfg-ads-enabled" class="sr-only peer" checked>
-                            <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-                        </label>
+                        <div>
+                            <span class="text-sm font-bold text-white block">Theme Display</span>
+                            <span class="text-xs text-slate-400" id="theme-label">Dark Luxury Mode</span>
+                        </div>
                     </div>
-
-                    <!-- Download Ad Countdown Seconds -->
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Download Ad Countdown (Seconds)</label>
-                        <select id="cfg-countdown" class="w-full bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
-                            <option value="4">4 Seconds (Recommended - High CPM)</option>
-                            <option value="6">6 Seconds (Maximum Ad Exposure)</option>
-                            <option value="2">2 Seconds (Fast)</option>
-                            <option value="0">0 Seconds (Instant Download / No Wait)</option>
-                        </select>
-                    </div>
-
-                    <!-- Your UPI ID -->
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Your Real UPI ID (To Receive Payments)</label>
-                        <input 
-                            type="text" 
-                            id="cfg-upi-id" 
-                            placeholder="e.g. 9876543210@paytm or yourname@oksbi" 
-                            class="w-full bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 font-mono focus:outline-none focus:border-purple-500"
-                        >
-                        <span class="text-[10px] text-slate-500 mt-1 block">When users buy VIP, money goes directly to this UPI address!</span>
-                    </div>
-
-                    <!-- Google AdSense ID -->
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Google AdSense Publisher ID</label>
-                        <input 
-                            type="text" 
-                            id="cfg-adsense-id" 
-                            placeholder="ca-pub-XXXXXXXXXXXXXXXX" 
-                            class="w-full bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 font-mono focus:outline-none focus:border-purple-500"
-                        >
-                    </div>
-
-                    <!-- Custom Ad Script Code (Adsterra / PropellerAds) -->
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Custom Ad Code / Script (Adsterra / Monetag)</label>
-                        <textarea 
-                            id="cfg-custom-ad" 
-                            rows="2"
-                            placeholder="Paste your ad banner script tag or HTML here..." 
-                            class="w-full bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 font-mono focus:outline-none focus:border-purple-500"
-                        ></textarea>
-                    </div>
-
-                    <div class="pt-2 flex justify-end gap-2">
-                        <button type="button" onclick="closeSettingsModal()" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-300">
-                            Cancel
-                        </button>
-                        <button type="submit" class="px-5 py-2 rounded-xl glow-btn text-xs font-bold text-white">
-                            Save Settings
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Admin Panel 2: Customer Payments / Orders Table -->
-            <div id="admin-panel-orders" class="space-y-3 hidden">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-slate-300">Customer UPI Payments:</span>
-                    <button type="button" onclick="fetchOrders()" class="text-[11px] text-purple-400 hover:text-purple-300 font-bold flex items-center gap-1">
-                        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Refresh
+                    <button type="button" onclick="toggleTheme()" class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold text-white flex items-center gap-1.5 transition-all">
+                        <span id="theme-toggle-btn-text">Switch to Light Mode ☀️</span>
                     </button>
                 </div>
-                <div id="orders-list-container" class="space-y-2 max-h-60 overflow-y-auto">
-                    <!-- Populated dynamically -->
+
+                <!-- 2. VIP Membership Status & Expiry -->
+                <div class="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="crown" class="w-5 h-5 text-amber-400 fill-amber-400"></i>
+                            <span class="text-sm font-bold text-white">VIP Membership</span>
+                        </div>
+                        <span id="settings-vip-badge" class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-800 text-slate-300">
+                            Free Plan
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-300" id="settings-vip-expiry">
+                        Free user with display ads. Upgrade to remove all ads and unlock 4K speeds!
+                    </p>
+                    <div class="mt-3">
+                        <button type="button" onclick="closeSettingsModal(); openVipModal();" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-amber-500/20 transition-all">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                            <span id="settings-vip-btn-text">Add / Upgrade VIP Plan</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. User Account & Log Out -->
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10" id="settings-account-box">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
+                                <i data-lucide="user" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-white block" id="settings-user-email">Guest User</span>
+                                <span class="text-[10px] text-slate-400" id="settings-user-status">Not logged in</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="settings-auth-actions">
+                        <button type="button" onclick="closeSettingsModal(); openAuthModal();" class="w-full py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+                            <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
+                            <span>Sign In / Create Account</span>
+                        </button>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <!-- User Authentication Modal (Sign In / Sign Up) -->
+    <div id="auth-modal" onclick="if(event.target === this) closeAuthModal()" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="background: rgba(3, 7, 18, 0.96) !important; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); z-index: 99999;">
+        <div class="p-6 sm:p-7 max-w-sm w-full relative rounded-3xl border border-white/10 shadow-2xl" style="background-color: #0b1120 !important; background: #0b1120 !important;">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-all z-10" title="Close">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="text-center mb-5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-pink-500 text-white flex items-center justify-center mx-auto mb-2 shadow-lg shadow-purple-500/20">
+                    <i data-lucide="user-check" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold brand-font text-white" id="auth-modal-title">Sign In to ReelSnap</h3>
+                <p class="text-xs text-slate-400 mt-0.5">Manage your VIP subscription & downloads</p>
+            </div>
+
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="auth-email-input" 
+                        placeholder="youremail@gmail.com" 
+                        required
+                        class="w-full bg-[#070B14] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Password</label>
+                    <input 
+                        type="password" 
+                        id="auth-password-input" 
+                        placeholder="••••••••" 
+                        required
+                        class="w-full bg-[#070B14] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
+                    >
+                </div>
+
+                <button type="submit" class="w-full py-2.5 rounded-xl glow-btn text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-500/25 transition-all">
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    <span id="auth-submit-btn-text">Continue / Sign In</span>
+                </button>
+            </form>
         </div>
     </div>
 

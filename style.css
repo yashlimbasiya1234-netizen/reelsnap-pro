@@ -175,3 +175,40 @@ h1, h2, h3, h4, .brand-font {
     box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.95), 0 0 35px -5px rgba(245, 158, 11, 0.2) !important;
     border-radius: 1.5rem;
 }
+
+/* Light Mode / White Mode Theme */
+html:not(.dark) body {
+    background-color: #F8FAFC !important;
+    color: #0F172A !important;
+}
+
+html:not(.dark) .glass-panel {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(226, 232, 240, 1) !important;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.06) !important;
+}
+
+html:not(.dark) nav {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-bottom: 1px solid #E2E8F0 !important;
+}
+
+html:not(.dark) .text-white {
+    color: #0F172A !important;
+}
+
+html:not(.dark) .text-slate-300, 
+html:not(.dark) .text-slate-400 {
+    color: #475569 !important;
+}
+
+html:not(.dark) #reel-url-input {
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    border-color: #CBD5E1 !important;
+}
+
+html:not(.dark) footer {
+    background: #F1F5F9 !important;
+    border-top-color: #E2E8F0 !important;
+}
