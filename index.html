@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReelSnap Pro - Download Instagram Reels in 4K Full HD [Free & No Watermark]</title>
+    <meta name="description" content="Download Instagram Reels, Videos, Stories, and Audio in 1080p / 4K Ultra HD for Free. Fast, safe, no watermark, works on iPhone, Android and PC.">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            purple: '#8B5CF6',
+                            pink: '#EC4899',
+                            cyan: '#06B6D4',
+                            dark: '#080B14',
+                            card: '#111827',
+                            gold: '#F59E0B'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti for VIP celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-[#080B14] text-slate-100 min-h-screen relative selection:bg-purple-500 selection:text-white">
+
+    <!-- Background Ambient Lights -->
+    <div class="blob-1"></div>
+    <div class="blob-2"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 backdrop-blur-xl bg-[#080B14]/80 border-b border-white/10 px-4 lg:px-8 py-3.5 transition-all">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="/" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-pink-500 to-amber-400 flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:scale-105 transition-transform">
+                    <i data-lucide="zap" class="w-5 h-5 text-white fill-white"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-extrabold brand-font tracking-tight text-white flex items-center gap-1.5">
+                        ReelSnap <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">PRO</span>
+                    </span>
+                    <span class="text-[10px] text-slate-400 -mt-1 font-medium tracking-wider uppercase">Ultra HD Downloader</span>
+                </div>
+            </a>
+
+            <!-- Nav Links (Desktop) -->
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+                <a href="#downloader" class="hover:text-purple-400 transition-colors">Downloader</a>
+                <a href="#how-it-works" class="hover:text-purple-400 transition-colors">How It Works</a>
+                <a href="#pricing" class="hover:text-purple-400 transition-colors flex items-center gap-1 text-amber-400">
+                    <i data-lucide="crown" class="w-4 h-4 fill-amber-400"></i> VIP Plans
+                </a>
+                <a href="#faq" class="hover:text-purple-400 transition-colors">FAQ</a>
+            </div>
+
+            <!-- Header Action Controls -->
+            <div class="flex items-center gap-3">
+                <!-- Mode Switcher: Lets user easily toggle between seeing Ads (Free Mode) and Ad-Free (VIP Mode) -->
+                <button onclick="toggleUserMode()" id="user-mode-btn" class="px-3 py-1.5 rounded-full text-xs font-bold bg-purple-500/10 border border-purple-500/30 text-purple-300 hover:bg-purple-500/20 flex items-center gap-1.5 transition-all" title="Click to toggle between Free Mode (With Ads) and VIP Mode (No Ads)">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="user-mode-label">Mode: Free User (Ads ON)</span>
+                </button>
+
+                <!-- Status Badge -->
+                <div id="vip-status-container" class="flex items-center">
+                    <button onclick="openVipModal()" id="vip-badge-btn" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/15 border border-amber-500/30 hover:border-amber-500 text-amber-300 flex items-center gap-1.5 transition-all">
+                        <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400 fill-amber-400"></i>
+                        <span>Upgrade VIP</span>
+                    </button>
+                </div>
+
+                <!-- Admin / Ad Settings Gear Button -->
+                <button onclick="openSettingsModal()" title="AdSense & Website Settings" class="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-400 hover:text-white transition-all">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Top Leaderboard Ad Slot (Slot 1) -->
+    <div id="top-ad-wrapper" class="max-w-5xl mx-auto px-4 pt-4">
+        <div class="ad-slot-box p-3.5 flex flex-col md:flex-row items-center justify-between gap-3 bg-gradient-to-r from-slate-900/90 via-indigo-950/60 to-purple-950/70 border border-purple-500/30 rounded-2xl shadow-xl">
+            <span class="ad-badge bg-black/60 text-slate-300">Sponsored Ad • Google Display</span>
+            <div class="flex items-center gap-3.5 text-left">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=120&auto=format&fit=crop&q=80" alt="Sponsor" class="w-12 h-12 rounded-xl object-cover shrink-0 border border-white/20 shadow-md">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h5 class="text-xs sm:text-sm font-bold text-white tracking-tight">AI Video Studio 2026 - Ultra 4K Enhancer</h5>
+                        <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-300 font-bold">Trending</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 mt-0.5">Automate viral Instagram Reels in 1-click. Free Trial available today!</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end shrink-0">
+                <a href="https://google.com" target="_blank" class="text-xs px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white font-bold shadow-lg transition-all">
+                    Visit Site →
+                </a>
+                <button onclick="closeAd('top-ad-wrapper')" class="text-slate-400 hover:text-slate-200 text-xs px-2 py-1">
+                    ✕
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-4 py-8 relative z-10" id="downloader">
+        
+        <!-- Hero Title Section -->
+        <div class="text-center max-w-3xl mx-auto pt-4 pb-8 space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold">
+                <span class="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>Fastest 1080p / 4K Instagram Downloader</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black brand-font tracking-tight leading-tight">
+                Download Instagram <br class="hidden sm:block">
+                <span class="text-gradient">Reels & Videos</span> Free
+            </h1>
+
+            <p class="text-slate-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+                Save any Instagram Reel, Video, Story or Audio directly to your phone or computer in original crystal clear quality. No watermark, 100% free.
+            </p>
+        </div>
+
+        <!-- Central Search / URL Input Box -->
+        <div class="max-w-3xl mx-auto">
+            <div class="glass-panel p-3 sm:p-4 glow-primary">
+                <form id="download-form" onsubmit="handleDownloadSubmit(event)" class="space-y-3">
+                    <div class="flex flex-col sm:flex-row items-center gap-2.5">
+                        
+                        <!-- Input with icon & Paste button -->
+                        <div class="relative w-full flex items-center">
+                            <div class="absolute left-3.5 text-pink-500 flex items-center justify-center">
+                                <i data-lucide="instagram" class="w-5 h-5"></i>
+                            </div>
+
+                            <input 
+                                type="text" 
+                                id="reel-url-input" 
+                                placeholder="Paste Instagram Reel or Post link here..." 
+                                class="w-full bg-[#0D1322] border border-white/10 rounded-xl pl-11 pr-20 py-3.5 text-sm sm:text-base text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+                                required
+                            />
+
+                            <!-- Paste from Clipboard button -->
+                            <button 
+                                type="button" 
+                                onclick="pasteFromClipboard()" 
+                                id="paste-btn" 
+                                title="Paste link"
+                                class="absolute right-2 px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-300 flex items-center gap-1 transition-all"
+                            >
+                                <i data-lucide="clipboard" class="w-3.5 h-3.5 text-purple-400"></i>
+                                <span>Paste</span>
+                            </button>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button 
+                            type="submit" 
+                            id="submit-btn" 
+                            class="w-full sm:w-auto shrink-0 glow-btn px-6 py-3.5 rounded-xl font-bold text-white text-sm sm:text-base flex items-center justify-center gap-2 cursor-pointer transition-all"
+                        >
+                            <i data-lucide="download" class="w-5 h-5"></i>
+                            <span>Download</span>
+                        </button>
+                    </div>
+
+                    <!-- Helpful Chips -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs text-slate-400 px-1">
+                        <div class="flex items-center gap-2">
+                            <span>Try example:</span>
+                            <button type="button" onclick="loadSampleLink()" class="text-purple-400 hover:text-purple-300 underline font-medium">
+                                Sample Reel Link
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center gap-1 text-emerald-400 font-medium">
+                                <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> No Login
+                            </span>
+                            <span class="flex items-center gap-1 text-cyan-400 font-medium">
+                                <i data-lucide="zap" class="w-3.5 h-3.5"></i> Super Fast
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Loading State Skeleton Card (Hidden by default) -->
+        <div id="loading-card" class="max-w-2xl mx-auto mt-8 hidden">
+            <div class="glass-panel p-6 text-center space-y-4">
+                <div class="inline-flex p-4 rounded-full bg-purple-500/10 text-purple-400 animate-spin">
+                    <i data-lucide="loader-2" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold text-white">Fetching Reel Data...</h4>
+                    <p class="text-xs text-slate-400 mt-1">Extracting high definition stream directly from Instagram servers</p>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                    <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-1.5 rounded-full w-2/3 animate-pulse"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Result Download Card (Appears after extraction) -->
+        <div id="result-card" class="max-w-3xl mx-auto mt-8 hidden">
+            <div class="glass-panel p-4 sm:p-6 border-purple-500/30 glow-accent">
+                <div class="flex flex-col md:flex-row gap-6 items-center">
+                    
+                    <!-- Media Preview Box -->
+                    <div class="relative w-full md:w-56 shrink-0 aspect-[9/16] max-h-72 rounded-xl overflow-hidden bg-black/60 border border-white/10 group">
+                        <img id="res-thumbnail" src="" alt="Reel Thumbnail" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
+                            <span id="res-duration" class="text-[11px] font-bold px-2 py-0.5 rounded bg-black/70 text-slate-200 backdrop-blur-sm">0:30</span>
+                        </div>
+                        <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-pink-600/90 text-white text-[10px] font-bold tracking-wide uppercase">
+                            Reel HD
+                        </div>
+                    </div>
+
+                    <!-- Metadata & Download Buttons -->
+                    <div class="w-full flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="w-6 h-6 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-[10px] font-bold text-white">IG</span>
+                                <span id="res-author" class="text-sm font-semibold text-purple-300">@instagram_user</span>
+                                <span class="text-xs text-slate-500">• Public Reel</span>
+                            </div>
+                            <h3 id="res-title" class="text-lg font-bold text-white line-clamp-2 leading-snug">
+                                Instagram Reel Title
+                            </h3>
+                        </div>
+
+                        <!-- Quality Download Buttons -->
+                        <div class="space-y-2.5 pt-2" id="qualities-container">
+                            <!-- Injected by app.js -->
+                        </div>
+
+                        <!-- Viral Share Toolbar (WhatsApp & Direct Share) -->
+                        <div class="pt-1 flex flex-wrap items-center gap-2">
+                            <button 
+                                type="button" 
+                                onclick="shareOnWhatsapp()" 
+                                class="grow sm:grow-0 px-4 py-2 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all"
+                            >
+                                <svg class="w-4 h-4 fill-slate-950" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                                <span>Share on WhatsApp</span>
+                            </button>
+                            <button 
+                                type="button" 
+                                onclick="copyShareLink()" 
+                                class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 font-semibold text-xs flex items-center gap-1.5 transition-all"
+                            >
+                                <i data-lucide="share-2" class="w-3.5 h-3.5 text-purple-400"></i>
+                                <span>Copy Link</span>
+                            </button>
+                        </div>
+
+                        <!-- In-Card Sponsored Native Ad Slot (Slot 2) -->
+                        <div id="result-native-ad" class="ad-slot-box p-3 flex items-center justify-between mt-2">
+                            <span class="ad-badge">Ad</span>
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
+                                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-xs font-bold text-slate-200">Super VPN: Ultra-Fast & Safe</p>
+                                    <p class="text-[10px] text-slate-400">Protect your privacy while downloading videos</p>
+                                </div>
+                            </div>
+                            <button class="text-[11px] font-semibold text-cyan-400 border border-cyan-500/30 px-2.5 py-1 rounded-md hover:bg-cyan-500/10">
+                                Install
+                            </button>
+                        </div>
+
+                        <!-- Download Another Link button -->
+                        <div class="pt-2 flex items-center justify-between text-xs text-slate-400">
+                            <button onclick="resetDownloader()" class="hover:text-white flex items-center gap-1 transition-colors">
+                                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Download Another Reel
+                            </button>
+                            <span class="text-[11px] text-slate-500">100% Watermark Free MP4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mid-Page Leaderboard Ad Slot (Slot 3) -->
+        <div id="mid-ad-wrapper" class="max-w-4xl mx-auto mt-12">
+            <div class="ad-slot-box p-4 sm:p-5 text-center bg-gradient-to-r from-[#0E1526] via-[#161D36] to-[#0E1526] border border-cyan-500/30 rounded-2xl shadow-2xl relative overflow-hidden">
+                <span class="ad-badge bg-black/60 text-cyan-300">Google AdSense Partner Ad</span>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 py-2">
+                    <div class="flex items-center gap-3.5 text-left">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white shrink-0 shadow-lg shadow-cyan-500/20">
+                            <i data-lucide="cloud-lightning" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="text-sm sm:text-base font-bold text-white">CloudHost Pro: Ultra-Fast SSD Hosting</h4>
+                                <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-400 text-slate-950 font-black">75% OFF</span>
+                            </div>
+                            <p class="text-xs text-slate-300 mt-1">Free Domain + SSL + 24/7 Support. Launch your website today for just ₹149/mo!</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2.5 shrink-0">
+                        <a href="https://google.com" target="_blank" class="px-5 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/20 transition-all">
+                            Claim 75% Discount →
+                        </a>
+                        <button onclick="closeAd('mid-ad-wrapper')" class="text-slate-400 hover:text-slate-200 text-xs px-2 py-1">
+                            ✕
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Platform Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto mt-12">
+            <div class="glass-panel p-4 text-center">
+                <span class="text-2xl font-black text-purple-400 brand-font" id="stat-downloads">24,500+</span>
+                <p class="text-xs text-slate-400 mt-0.5 font-medium">Reels Downloaded Today</p>
+            </div>
+            <div class="glass-panel p-4 text-center">
+                <span class="text-2xl font-black text-pink-400 brand-font">100% Free</span>
+                <p class="text-xs text-slate-400 mt-0.5 font-medium">Zero Hidden Charges</p>
+            </div>
+            <div class="glass-panel p-4 text-center">
+                <span class="text-2xl font-black text-cyan-400 brand-font">4K / 1080p</span>
+                <p class="text-xs text-slate-400 mt-0.5 font-medium">Original Quality</p>
+            </div>
+            <div class="glass-panel p-4 text-center">
+                <span class="text-2xl font-black text-emerald-400 brand-font">99.9%</span>
+                <p class="text-xs text-slate-400 mt-0.5 font-medium">Server Uptime</p>
+            </div>
+        </div>
+
+        <!-- VIP Pricing & Monetization Section -->
+        <section id="pricing" class="mt-20 scroll-mt-20">
+            <div class="text-center max-w-2xl mx-auto space-y-3 mb-10">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-xs font-bold uppercase tracking-wider">
+                    <i data-lucide="crown" class="w-3.5 h-3.5 fill-amber-400"></i> Monetization & VIP Plans
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold brand-font text-white">
+                    Upgrade to <span class="text-gradient-gold">ReelSnap VIP</span>
+                </h2>
+                <p class="text-slate-400 text-sm">
+                    Enjoy lightning-fast dedicated servers, 100% ad-free experience, batch download & high-bitrate audio extractor.
+                </p>
+            </div>
+
+            <!-- Pricing Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                
+                <!-- Plan 1: 24h Pass (₹49) -->
+                <div class="glass-panel p-6 flex flex-col justify-between glass-panel-hover border-white/5">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-white">Starter Pass</h3>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-semibold">24 Hours</span>
+                        </div>
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="text-3xl font-black text-white">₹49</span>
+                            <span class="text-xs text-slate-400">/ one-time</span>
+                        </div>
+                        <ul class="space-y-3 text-xs text-slate-300">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i> 100% Ad-Free Experience
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i> Turbo Download Speeds
+                            </li>
+                            <li class="flex items-center gap-2 text-slate-500">
+                                <i data-lucide="x" class="w-4 h-4 text-slate-600 shrink-0"></i> Batch Downloader
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="openVipModal('Starter Pass', '₹49')" class="w-full mt-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition-all">
+                        Get 24h Pass (₹49)
+                    </button>
+                </div>
+
+                <!-- Plan 2: Pro Monthly (₹299 - Highlighted) -->
+                <div class="glass-panel p-6 flex flex-col justify-between glass-panel-hover border-purple-500/40 relative shadow-2xl shadow-purple-500/10">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 text-white text-[10px] font-black uppercase tracking-wider">
+                        Most Popular
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-4 pt-1">
+                            <h3 class="text-lg font-bold text-white">Pro Monthly</h3>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-semibold">30 Days</span>
+                        </div>
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="text-3xl font-black text-white">₹299</span>
+                            <span class="text-xs text-slate-400">/ month</span>
+                        </div>
+                        <ul class="space-y-3 text-xs text-slate-300">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i> 100% Ad-Free Browsing
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i> Unlimited 4K Ultra HD Downloads
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i> Batch Download (10 Reels at once)
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0"></i> MP3 High-Res Audio Extractor
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="openVipModal('Pro Monthly', '₹299')" class="w-full mt-6 py-2.5 rounded-xl glow-btn text-white font-bold text-xs transition-all">
+                        Upgrade to Pro (₹299)
+                    </button>
+                </div>
+
+                <!-- Plan 3: VIP Lifetime (₹1999) -->
+                <div class="glass-panel p-6 flex flex-col justify-between glass-panel-hover border-amber-500/30">
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-amber-300 flex items-center gap-1.5">
+                                <i data-lucide="crown" class="w-4 h-4 fill-amber-400"></i> Lifetime VIP
+                            </h3>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-semibold">Forever</span>
+                        </div>
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="text-3xl font-black text-white">₹1,999</span>
+                            <span class="text-xs text-slate-400">/ one-time</span>
+                        </div>
+                        <ul class="space-y-3 text-xs text-slate-300">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i> Everything in Pro Monthly
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i> Lifetime VIP Member Badge
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i> Priority 24/7 Dedicated Server
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="check" class="w-4 h-4 text-amber-400 shrink-0"></i> Instant Access to Future Features
+                            </li>
+                        </ul>
+                    </div>
+                    <button onclick="openVipModal('Lifetime VIP', '₹1999')" class="w-full mt-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-all">
+                        Get Lifetime VIP (₹1,999)
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Test VIP Promo Key banner -->
+            <div class="max-w-2xl mx-auto mt-6 text-center">
+                <p class="text-xs text-slate-400">
+                    Want to test VIP right now? Click <button onclick="openVipModal()" class="text-amber-400 font-bold underline hover:text-amber-300">Enter VIP Key</button> and use code <span class="bg-white/10 px-1.5 py-0.5 rounded text-white font-mono font-bold">VIP2026</span>!
+                </p>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="mt-24 scroll-mt-20">
+            <div class="text-center max-w-2xl mx-auto space-y-3 mb-12">
+                <h2 class="text-3xl font-black brand-font text-white">How to Download Instagram Reels</h2>
+                <p class="text-slate-400 text-sm">Download your favorite reels in 3 quick and easy steps.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <div class="glass-panel p-6 text-center space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center mx-auto text-lg font-bold">1</div>
+                    <h4 class="font-bold text-white text-base">Copy Reel Link</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">Open Instagram, tap the Share icon on any Reel or Post, and tap "Copy Link".</p>
+                </div>
+
+                <div class="glass-panel p-6 text-center space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-pink-500/20 text-pink-400 flex items-center justify-center mx-auto text-lg font-bold">2</div>
+                    <h4 class="font-bold text-white text-base">Paste Link Here</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">Paste the copied URL in the input box above and click the "Download" button.</p>
+                </div>
+
+                <div class="glass-panel p-6 text-center space-y-3">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center mx-auto text-lg font-bold">3</div>
+                    <h4 class="font-bold text-white text-base">Save MP4 Video</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">Choose your preferred resolution (1080p, 720p or MP3) and save instantly without watermark.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features & Why Us -->
+        <section class="mt-24">
+            <div class="text-center max-w-2xl mx-auto space-y-3 mb-12">
+                <h2 class="text-3xl font-black brand-font text-white">Why ReelSnap Pro?</h2>
+                <p class="text-slate-400 text-sm">Engineered for speed, privacy, and maximum video fidelity.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <div class="glass-panel p-5 flex items-start gap-4">
+                    <div class="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 shrink-0">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">No Watermark</h4>
+                        <p class="text-xs text-slate-400 mt-1">Download clean videos without ugly logos or Instagram watermarks.</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 flex items-start gap-4">
+                    <div class="p-2.5 rounded-xl bg-pink-500/10 text-pink-400 shrink-0">
+                        <i data-lucide="lock" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">No Login Needed</h4>
+                        <p class="text-xs text-slate-400 mt-1">We never ask for your Instagram password or account details.</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 flex items-start gap-4">
+                    <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 shrink-0">
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">High-Speed CDN</h4>
+                        <p class="text-xs text-slate-400 mt-1">Blazing fast server network delivers files in seconds.</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 flex items-start gap-4">
+                    <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 shrink-0">
+                        <i data-lucide="music" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">MP3 Audio Extractor</h4>
+                        <p class="text-xs text-slate-400 mt-1">Extract trending background music and songs directly as audio files.</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 flex items-start gap-4">
+                    <div class="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 shrink-0">
+                        <i data-lucide="smartphone" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">iPhone & Android Friendly</h4>
+                        <p class="text-xs text-slate-400 mt-1">Works seamlessly inside Safari, Chrome, Samsung Internet & desktop.</p>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-5 flex items-start gap-4">
+                    <div class="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400 shrink-0">
+                        <i data-lucide="infinity" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">Unlimited Usage</h4>
+                        <p class="text-xs text-slate-400 mt-1">Download as many reels as you want without daily restrictions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="mt-24 scroll-mt-20 max-w-3xl mx-auto">
+            <div class="text-center space-y-3 mb-10">
+                <h2 class="text-3xl font-black brand-font text-white">Frequently Asked Questions</h2>
+                <p class="text-slate-400 text-sm">Got questions? We've got answers.</p>
+            </div>
+
+            <div class="space-y-3" id="faq-accordion">
+                <!-- FAQ 1 -->
+                <div class="glass-panel p-4 cursor-pointer" onclick="toggleFaq(1)">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-bold text-sm text-white">Is ReelSnap Pro completely free to use?</h4>
+                        <i data-lucide="chevron-down" id="faq-icon-1" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                    </div>
+                    <div id="faq-answer-1" class="hidden mt-3 text-xs text-slate-400 leading-relaxed border-t border-white/5 pt-3">
+                        Yes! You can download unlimited Instagram Reels, videos, and audio 100% free. We also offer an optional VIP plan for users who want an ad-free experience, batch download, and ultra-high speeds.
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="glass-panel p-4 cursor-pointer" onclick="toggleFaq(2)">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-bold text-sm text-white">How do I download Instagram reels on iPhone (iOS)?</h4>
+                        <i data-lucide="chevron-down" id="faq-icon-2" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                    </div>
+                    <div id="faq-answer-2" class="hidden mt-3 text-xs text-slate-400 leading-relaxed border-t border-white/5 pt-3">
+                        On iPhone, simply open Safari, paste the reel link into ReelSnap Pro, and tap Download. When the prompt appears, tap "Download". The video will be saved directly into your Safari Downloads, which you can easily save to your Photos app.
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="glass-panel p-4 cursor-pointer" onclick="toggleFaq(3)">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-bold text-sm text-white">Does the downloaded video contain a watermark?</h4>
+                        <i data-lucide="chevron-down" id="faq-icon-3" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                    </div>
+                    <div id="faq-answer-3" class="hidden mt-3 text-xs text-slate-400 leading-relaxed border-t border-white/5 pt-3">
+                        No! All videos downloaded through ReelSnap Pro are 100% clean and watermark-free in original full HD resolution.
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="glass-panel p-4 cursor-pointer" onclick="toggleFaq(4)">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-bold text-sm text-white">How does the website owner earn money from this site?</h4>
+                        <i data-lucide="chevron-down" id="faq-icon-4" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                    </div>
+                    <div id="faq-answer-4" class="hidden mt-3 text-xs text-slate-400 leading-relaxed border-t border-white/5 pt-3">
+                        The site generates revenue in two powerful ways: 1) Display advertising (Google AdSense, Adsterra, or affiliate banners), and 2) Paid VIP subscriptions (users pay for ad-free experience, batch downloading, and high speed). You can configure your own AdSense ID and UPI payment ID in the settings!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Sticky Bottom Floating Ad (Slot 4 - Mobile & Desktop) -->
+    <div id="bottom-sticky-ad" class="fixed bottom-0 left-0 right-0 z-40 bg-[#0B0F19]/95 backdrop-blur-md border-t border-white/10 px-4 py-2.5 transition-all">
+        <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <span class="text-[9px] uppercase px-1.5 py-0.5 rounded bg-white/10 text-slate-400 font-bold">Ad</span>
+                <p class="text-xs text-slate-300 font-medium hidden sm:block">
+                    ⚡ Upgrade to VIP for just ₹99/mo to permanently remove all ads!
+                </p>
+                <p class="text-xs text-slate-300 font-medium sm:hidden">
+                    ⚡ Remove all ads with VIP Pass!
+                </p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openVipModal()" class="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-xs transition-all">
+                    Go Ad-Free
+                </button>
+                <button onclick="closeAd('bottom-sticky-ad')" class="text-slate-400 hover:text-white text-xs p-1">
+                    ✕
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interstitial Ad & Countdown Modal (High Revenue Ad Impression) -->
+    <div id="countdown-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+        <div class="glass-panel p-6 max-w-md w-full relative border-purple-500/40 text-center space-y-4 glow-primary">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-purple-500/20 text-purple-400 font-black text-2xl brand-font mx-auto" id="countdown-timer-num">
+                3
+            </div>
+            
+            <div>
+                <h3 class="text-xl font-bold text-white brand-font">Preparing Your Download...</h3>
+                <p class="text-xs text-slate-400 mt-1">Your high-speed file is being prepared from Instagram servers.</p>
+            </div>
+
+            <!-- Interstitial Ad Space (Highest CPM) -->
+            <div class="ad-slot-box p-4 text-left relative overflow-hidden" id="interstitial-ad-box">
+                <span class="ad-badge">Sponsored Advertisement</span>
+                <div class="flex items-start gap-3 mt-2">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-400 to-pink-500 flex items-center justify-center text-white shrink-0 shadow-lg">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-100">AI Video Enhancer Pro 2026</h4>
+                        <p class="text-[11px] text-slate-400 mt-0.5 leading-snug">Turn blurry reels into 4K 60fps masterpiece with 1-click AI.</p>
+                        <a href="https://google.com" target="_blank" class="inline-block mt-2 text-[10px] font-bold px-3 py-1 rounded bg-purple-600 hover:bg-purple-500 text-white transition-all">
+                            Try Free Now →
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skip Ad with VIP -->
+            <div class="pt-1 flex items-center justify-between text-xs text-slate-400 border-t border-white/10">
+                <button onclick="skipCountdownNow()" id="skip-countdown-btn" class="text-slate-400 hover:text-white font-medium text-[11px] flex items-center gap-1">
+                    <span>Wait 3s</span>
+                </button>
+                <button onclick="openVipModal()" class="text-amber-400 hover:text-amber-300 font-bold text-[11px] flex items-center gap-1">
+                    <i data-lucide="crown" class="w-3.5 h-3.5 fill-amber-400"></i> Go Ad-Free Forever
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIP Checkout / Upgrade Modal -->
+    <div id="vip-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+        <div class="glass-panel p-6 sm:p-8 max-w-md w-full relative border-amber-500/30">
+            <button onclick="closeVipModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="text-center mb-5">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-2">
+                    <i data-lucide="crown" class="w-6 h-6 fill-amber-400"></i>
+                </div>
+                <h3 class="text-2xl font-black brand-font text-white">Upgrade to ReelSnap VIP</h3>
+                <p class="text-xs text-slate-400 mt-0.5">Instant ad removal, batch download & dedicated 4K speeds</p>
+            </div>
+
+            <!-- Tab Switcher -->
+            <div class="flex border-b border-white/10 mb-4 text-xs font-bold">
+                <button onclick="switchVipTab('pay')" id="tab-btn-pay" class="flex-1 pb-2 border-b-2 border-amber-400 text-amber-400">
+                    Pay via UPI (GPay/PhonePe)
+                </button>
+                <button onclick="switchVipTab('key')" id="tab-btn-key" class="flex-1 pb-2 text-slate-400 border-b-2 border-transparent">
+                    VIP License / Promo Key
+                </button>
+            </div>
+
+            <!-- Panel 1: Real UPI QR & Direct App Payment -->
+            <div id="panel-vip-pay" class="space-y-4">
+                
+                <!-- Plan Picker in Payment Modal -->
+                <div class="grid grid-cols-3 gap-2">
+                    <button type="button" onclick="selectPlanPayment('Starter Pass', 49)" id="plan-opt-49" class="p-2 rounded-xl text-center border border-white/10 bg-white/5 hover:border-amber-400 transition-all">
+                        <span class="block text-[10px] text-slate-400 font-semibold">24 Hours</span>
+                        <span class="block text-sm font-bold text-white">₹49</span>
+                    </button>
+                    <button type="button" onclick="selectPlanPayment('Pro Monthly', 299)" id="plan-opt-299" class="p-2 rounded-xl text-center border-2 border-amber-400 bg-amber-400/10 transition-all">
+                        <span class="block text-[10px] text-amber-400 font-bold uppercase">Popular</span>
+                        <span class="block text-sm font-bold text-white">₹299</span>
+                    </button>
+                    <button type="button" onclick="selectPlanPayment('VIP Lifetime', 1999)" id="plan-opt-1999" class="p-2 rounded-xl text-center border border-white/10 bg-white/5 hover:border-amber-400 transition-all">
+                        <span class="block text-[10px] text-slate-400 font-semibold">Lifetime</span>
+                        <span class="block text-sm font-bold text-white">₹1,999</span>
+                    </button>
+                </div>
+
+                <!-- UPI QR Code Box -->
+                <div class="p-4 rounded-xl bg-white/5 border border-white/10 text-center space-y-3">
+                    <div class="w-36 h-36 bg-white p-2 rounded-xl mx-auto flex items-center justify-center shadow-lg">
+                        <img id="dynamic-upi-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=yourname@upi&pn=ReelSnap&am=99&cu=INR" alt="UPI QR" class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-300 font-semibold">Scan to Pay <span class="text-amber-400 font-bold" id="pay-amount-display">₹99</span></p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">UPI ID: <span class="font-mono text-amber-400 font-bold" id="modal-upi-id">yourname@upi</span></p>
+                    </div>
+
+                    <!-- Direct App Pay Button for Mobile Users -->
+                    <a id="direct-upi-link" href="upi://pay?pa=yourname@upi&pn=ReelSnap&am=99&cu=INR" class="block w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg transition-all">
+                        📲 Pay Directly in GPay / PhonePe / Paytm
+                    </a>
+                </div>
+
+                <!-- UTR / Payment Proof Form -->
+                <form onsubmit="handleUpiProofSubmit(event)" class="space-y-2">
+                    <label class="block text-xs font-medium text-slate-300">Enter 12-Digit UPI Ref / UTR No. after payment:</label>
+                    <div class="flex gap-2">
+                        <input 
+                            type="text" 
+                            id="upi-utr-input" 
+                            placeholder="e.g. 412893847291" 
+                            maxlength="20"
+                            required
+                            class="grow bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 font-mono focus:outline-none focus:border-amber-400"
+                        >
+                        <button type="submit" id="submit-utr-btn" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shrink-0 transition-all">
+                            Submit & Activate
+                        </button>
+                    </div>
+                    <p class="text-[10px] text-slate-500">Instant VIP verification upon entering reference code.</p>
+                </form>
+                <div id="upi-order-msg" class="text-xs text-center font-medium"></div>
+            </div>
+
+            <!-- Panel 2: License Key Verification (Demo & Promo) -->
+            <div id="panel-vip-key" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1.5">Enter VIP License Key or Promo Code</label>
+                    <input 
+                        type="text" 
+                        id="vip-key-input" 
+                        placeholder="e.g. VIP2026 or PREMIUM100" 
+                        class="w-full bg-[#0D1322] border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 uppercase font-mono"
+                    >
+                    <p class="text-[11px] text-amber-400/80 mt-1.5">
+                        💡 Tip: Try code <span class="font-bold underline">VIP2026</span> for instant free VIP testing!
+                    </p>
+                </div>
+
+                <button onclick="submitVipKey()" id="verify-key-btn" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-sm flex items-center justify-center gap-2 transition-all">
+                    <span>Activate VIP Access</span>
+                </button>
+                <div id="vip-key-msg" class="text-xs text-center font-medium"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin & AdSense Settings Modal (Now with Orders Viewer) -->
+    <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+        <div class="glass-panel p-6 max-w-lg w-full relative border-purple-500/30 max-h-[90vh] overflow-y-auto">
+            <button onclick="closeSettingsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="mb-5">
+                <h3 class="text-xl font-bold brand-font text-white flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-5 h-5 text-purple-400"></i> Website Monetization & Admin
+                </h3>
+                <p class="text-xs text-slate-400 mt-1">Configure your UPI ID, AdSense, and view customer payments</p>
+            </div>
+
+            <!-- Admin Tabs -->
+            <div class="flex border-b border-white/10 mb-4 text-xs font-bold">
+                <button type="button" onclick="switchAdminTab('settings')" id="admin-tab-settings" class="flex-1 pb-2 border-b-2 border-purple-500 text-purple-400">
+                    Ads & UPI Settings
+                </button>
+                <button type="button" onclick="switchAdminTab('orders')" id="admin-tab-orders" class="flex-1 pb-2 text-slate-400 border-b-2 border-transparent">
+                    Received Payments (<span id="orders-count-badge">0</span>)
+                </button>
+            </div>
+
+            <!-- Admin Panel 1: Settings Form -->
+            <div id="admin-panel-settings">
+                <form onsubmit="handleSaveSettings(event)" class="space-y-4">
+                    <!-- Ads Toggle -->
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
+                        <div>
+                            <span class="text-sm font-bold text-white block">Display Ads (Monetization)</span>
+                            <span class="text-xs text-slate-400">Turn all ad spaces on or off</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="cfg-ads-enabled" class="sr-only peer" checked>
+                            <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                        </label>
+                    </div>
+
+                    <!-- Download Ad Countdown Seconds -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Download Ad Countdown (Seconds)</label>
+                        <select id="cfg-countdown" class="w-full bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
+                            <option value="4">4 Seconds (Recommended - High CPM)</option>
+                            <option value="6">6 Seconds (Maximum Ad Exposure)</option>
+                            <option value="2">2 Seconds (Fast)</option>
+                            <option value="0">0 Seconds (Instant Download / No Wait)</option>
+                        </select>
+                    </div>
+
+                    <!-- Your UPI ID -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Your Real UPI ID (To Receive Payments)</label>
+                        <input 
+                            type="text" 
+                            id="cfg-upi-id" 
+                            placeholder="e.g. 9876543210@paytm or yourname@oksbi" 
+                            class="w-full bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 font-mono focus:outline-none focus:border-purple-500"
+                        >
+                        <span class="text-[10px] text-slate-500 mt-1 block">When users buy VIP, money goes directly to this UPI address!</span>
+                    </div>
+
+                    <!-- Google AdSense ID -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Google AdSense Publisher ID</label>
+                        <input 
+                            type="text" 
+                            id="cfg-adsense-id" 
+                            placeholder="ca-pub-XXXXXXXXXXXXXXXX" 
+                            class="w-full bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 font-mono focus:outline-none focus:border-purple-500"
+                        >
+                    </div>
+
+                    <!-- Custom Ad Script Code (Adsterra / PropellerAds) -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Custom Ad Code / Script (Adsterra / Monetag)</label>
+                        <textarea 
+                            id="cfg-custom-ad" 
+                            rows="2"
+                            placeholder="Paste your ad banner script tag or HTML here..." 
+                            class="w-full bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 font-mono focus:outline-none focus:border-purple-500"
+                        ></textarea>
+                    </div>
+
+                    <div class="pt-2 flex justify-end gap-2">
+                        <button type="button" onclick="closeSettingsModal()" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-slate-300">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-5 py-2 rounded-xl glow-btn text-xs font-bold text-white">
+                            Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Admin Panel 2: Customer Payments / Orders Table -->
+            <div id="admin-panel-orders" class="space-y-3 hidden">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-slate-300">Customer UPI Payments:</span>
+                    <button type="button" onclick="fetchOrders()" class="text-[11px] text-purple-400 hover:text-purple-300 font-bold flex items-center gap-1">
+                        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Refresh
+                    </button>
+                </div>
+                <div id="orders-list-container" class="space-y-2 max-h-60 overflow-y-auto">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Legal & Policy Modal (Compliant for Google AdSense & Ad Networks) -->
+    <div id="legal-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+        <div class="glass-panel p-6 sm:p-8 max-w-2xl w-full relative border-white/10 max-h-[85vh] overflow-y-auto">
+            <button onclick="closeLegalModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="mb-5 pb-3 border-b border-white/10 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="shield" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold brand-font text-white" id="legal-modal-title">Privacy Policy</h3>
+                    <p class="text-xs text-slate-400">ReelSnap Pro Compliance & Transparency</p>
+                </div>
+            </div>
+
+            <!-- Modal Content Body -->
+            <div id="legal-modal-body" class="text-xs text-slate-300 space-y-3 leading-relaxed">
+                <!-- Injected via JavaScript based on link clicked -->
+            </div>
+
+            <div class="mt-6 pt-3 border-t border-white/10 text-right">
+                <button onclick="closeLegalModal()" class="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-28 border-t border-white/10 bg-[#06080F] py-12 px-4 relative z-10 text-xs text-slate-500">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white font-bold">
+                    <i data-lucide="zap" class="w-4 h-4 fill-white"></i>
+                </div>
+                <div>
+                    <p class="font-bold text-slate-200">ReelSnap Pro</p>
+                    <p class="text-[11px] text-slate-500">All-in-one Instagram Media Downloader</p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-6 text-slate-400">
+                <a href="#downloader" class="hover:text-white transition-colors">Reel Downloader</a>
+                <a href="#how-it-works" class="hover:text-white transition-colors">Instructions</a>
+                <a href="#pricing" class="hover:text-white transition-colors">VIP Subscription</a>
+                <a href="javascript:void(0)" onclick="openLegalModal('privacy')" class="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="javascript:void(0)" onclick="openLegalModal('terms')" class="hover:text-white transition-colors">Terms of Service</a>
+                <a href="javascript:void(0)" onclick="openLegalModal('dmca')" class="hover:text-white transition-colors">DMCA Disclaimer</a>
+            </div>
+
+            <div class="text-center md:text-right text-[11px] text-slate-500 space-y-1">
+                <p>© 2026 ReelSnap Pro. All rights reserved.</p>
+                <p>Not affiliated with or endorsed by Instagram™ or Meta Platforms, Inc.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/app.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
