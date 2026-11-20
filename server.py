@@ -140,10 +140,35 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_index():
-    index_file = os.path.join(STATIC_DIR, "index.html")
-    if os.path.exists(index_file):
-        return FileResponse(index_file)
-    return HTMLResponse("<h1>ReelSnap Pro Backend Running.</h1>")
+    # 1. Check static/index.html
+    p1 = os.path.join(STATIC_DIR, "index.html")
+    if os.path.exists(p1):
+        return FileResponse(p1)
+    # 2. Check root index.html
+    p2 = os.path.join(BASE_DIR, "index.html")
+    if os.path.exists(p2):
+        return FileResponse(p2)
+    # 3. Check current working directory
+    p3 = os.path.join(os.getcwd(), "index.html")
+    if os.path.exists(p3):
+        return FileResponse(p3)
+    return HTMLResponse("<h1>ReelSnap Pro Backend Running. Please upload index.html</h1>")
+
+@app.get("/static/app.js")
+@app.get("/app.js")
+async def get_app_js():
+    for p in [os.path.join(STATIC_DIR, "app.js"), os.path.join(BASE_DIR, "app.js")]:
+        if os.path.exists(p):
+            return FileResponse(p, media_type="application/javascript")
+    raise HTTPException(status_code=404, detail="app.js not found")
+
+@app.get("/static/style.css")
+@app.get("/style.css")
+async def get_style_css():
+    for p in [os.path.join(STATIC_DIR, "style.css"), os.path.join(BASE_DIR, "style.css")]:
+        if os.path.exists(p):
+            return FileResponse(p, media_type="text/css")
+    raise HTTPException(status_code=404, detail="style.css not found")
 
 ORDERS_FILE = os.path.join(BASE_DIR, "orders.json")
 
