@@ -196,6 +196,7 @@ async def get_favicon():
     return Response(content=FAVICON_SVG, media_type="image/svg+xml")
 
 ORDERS_FILE = os.path.join(BASE_DIR, "orders.json")
+USERS_FILE = os.path.join(BASE_DIR, "users.json")
 
 def load_orders():
     if os.path.exists(ORDERS_FILE):
@@ -209,6 +210,78 @@ def load_orders():
 def save_orders(orders):
     with open(ORDERS_FILE, "w", encoding="utf-8") as f:
         json.dump(orders, f, indent=2)
+
+def load_users():
+    if os.path.exists(USERS_FILE):
+        try:
+            with open(USERS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
+
+def save_users(users):
+    with open(USERS_FILE, "w", encoding="utf-8") as f:
+        json.dump(users, f, indent=2)
+
+@app.post("/api/auth/login")
+async def auth_login(data: dict):
+    email = str(data.get("email", "")).strip().lower()
+    name = str(data.get("name", "")).strip()
+    provider = str(data.get("provider", "email")).strip()
+
+    if not email:
+        raise HTTPException(status_code=400, detail="Email is required")
+
+    if not name:
+        name = email.split("@")[0].capitalize()
+
+    users = load_users()
+    existing_user = None
+    for u in users:
+        if u.get("email") == email:
+            existing_user = u
+            break
+
+    import time
+    now_str = time.strftime("%d-%m-%Y %I:%M:%S %p")
+
+    if not existing_user:
+        new_user = {
+            "id": f"usr_{int(time.time())}",
+            "email": email,
+            "name": name,
+            "provider": provider,
+            "plan": "Free Plan",
+            "expiry": None,
+            "created_at": now_str,
+            "last_login": now_str,
+            "downloads_count": 0
+        }
+        users.insert(0, new_user)
+        save_users(users)
+        user_data = new_user
+    else:
+        existing_user["last_login"] = now_str
+        if name and not existing_user.get("name"):
+            existing_user["name"] = name
+        save_users(users)
+        user_data = existing_user
+
+    return {
+        "success": True,
+        "message": f"Welcome back, {user_data.get('name')}!",
+        "user": user_data
+    }
+
+@app.get("/api/admin/users")
+async def get_all_users():
+    users = load_users()
+    return {
+        "success": True,
+        "total_users": len(users),
+        "users": users
+    }
 
 @app.get("/api/config")
 async def get_config():
@@ -264,6 +337,15 @@ async def create_order(data: dict):
     }
     orders.insert(0, new_order)
     save_orders(orders[:100])
+
+    email = str(data.get("email") or data.get("contact") or "").strip().lower()
+    if email:
+        users = load_users()
+        for u in users:
+            if u.get("email") == email:
+                u["plan"] = data.get("plan", "VIP Lifetime")
+                save_users(users)
+                break
     return {
         "success": True, 
         "order_id": new_order["id"],

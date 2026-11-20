@@ -75,17 +75,25 @@
             </div>
 
             <!-- Header Action Controls -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2.5">
+                <!-- User Sign In / Profile Button -->
+                <div id="nav-user-container" class="flex items-center">
+                    <button onclick="openAuthModal()" class="px-3 py-1.5 rounded-full text-xs font-bold bg-purple-600/20 hover:bg-purple-600/30 text-purple-200 border border-purple-500/30 flex items-center gap-1.5 transition-all">
+                        <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                        <span>Sign In</span>
+                    </button>
+                </div>
+
                 <!-- Status Badge / Upgrade VIP Button -->
                 <div id="vip-status-container" class="flex items-center">
-                    <button onclick="openVipModal()" id="vip-badge-btn" class="px-4 py-2 rounded-full text-xs font-bold bg-amber-500/15 border border-amber-500/40 hover:border-amber-400 text-amber-300 flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/10">
+                    <button onclick="openVipModal('Lifetime VIP', 1999)" id="vip-badge-btn" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/15 border border-amber-500/40 hover:border-amber-400 text-amber-300 flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/10">
                         <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400 fill-amber-400"></i>
                         <span>Upgrade VIP</span>
                     </button>
                 </div>
 
-                <!-- Admin / Ad Settings Gear Button -->
-                <button onclick="openSettingsModal()" title="AdSense & Website Settings" class="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-400 hover:text-white transition-all">
+                <!-- Settings Gear Button -->
+                <button onclick="openSettingsModal()" title="Preferences & Settings" class="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-400 hover:text-white transition-all">
                     <i data-lucide="settings" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -871,11 +879,27 @@
                         </button>
                     </div>
                 </div>
+
+                <!-- 4. Registered Users Record (For Yash / Admin) -->
+                <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+                    <button type="button" onclick="toggleUsersRecord()" class="w-full flex items-center justify-between text-xs font-bold text-slate-300 hover:text-white">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="users" class="w-4 h-4 text-cyan-400"></i>
+                            <span>Registered Users Record</span>
+                        </div>
+                        <span id="settings-users-count" class="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-black">
+                            0 Users
+                        </span>
+                    </button>
+                    <div id="settings-users-container" class="mt-3 space-y-2 max-h-48 overflow-y-auto hidden">
+                        <!-- Populated dynamically from /api/admin/users -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- User Authentication Modal (Sign In / Sign Up) -->
+    <!-- User Authentication Modal (Sign In / Sign Up with Google) -->
     <div id="auth-modal" onclick="if(event.target === this) closeAuthModal()" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="background: rgba(3, 7, 18, 0.96) !important; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); z-index: 99999;">
         <div class="p-6 sm:p-7 max-w-sm w-full relative rounded-3xl border border-white/10 shadow-2xl" style="background-color: #0b1120 !important; background: #0b1120 !important;">
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-all z-10" title="Close">
@@ -884,13 +908,42 @@
 
             <div class="text-center mb-5">
                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-pink-500 text-white flex items-center justify-center mx-auto mb-2 shadow-lg shadow-purple-500/20">
-                    <i data-lucide="user-check" class="w-6 h-6"></i>
+                    <i data-lucide="sparkles" class="w-6 h-6"></i>
                 </div>
-                <h3 class="text-xl font-bold brand-font text-white" id="auth-modal-title">Sign In to ReelSnap</h3>
-                <p class="text-xs text-slate-400 mt-0.5">Manage your VIP subscription & downloads</p>
+                <h3 class="text-xl font-black brand-font text-white">Welcome to ReelSnap Pro</h3>
+                <p class="text-xs text-slate-400 mt-0.5">Sign in to save your VIP pass & download history</p>
             </div>
 
+            <!-- 1. Google 1-Click Sign-In Button -->
+            <button type="button" onclick="loginWithGoogle()" class="w-full py-3 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs flex items-center justify-center gap-3 shadow-lg shadow-black/40 transition-all border border-slate-200">
+                <svg class="w-4 h-4" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                <span>Continue with Google</span>
+            </button>
+
+            <!-- Divider -->
+            <div class="relative flex py-3 items-center">
+                <div class="flex-grow border-t border-white/10"></div>
+                <span class="flex-shrink mx-3 text-[10px] text-slate-500 uppercase tracking-widest font-bold">Or Email Sign In</span>
+                <div class="flex-grow border-t border-white/10"></div>
+            </div>
+
+            <!-- Email Form -->
             <form onsubmit="handleAuthSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Your Name</label>
+                    <input 
+                        type="text" 
+                        id="auth-name-input" 
+                        placeholder="e.g. Rahul Patel" 
+                        class="w-full bg-[#070B14] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
+                    >
+                </div>
+
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
                     <input 
@@ -898,26 +951,20 @@
                         id="auth-email-input" 
                         placeholder="youremail@gmail.com" 
                         required
-                        class="w-full bg-[#070B14] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
-                    >
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Password</label>
-                    <input 
-                        type="password" 
-                        id="auth-password-input" 
-                        placeholder="••••••••" 
-                        required
-                        class="w-full bg-[#070B14] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
+                        class="w-full bg-[#070B14] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-500"
                     >
                 </div>
 
                 <button type="submit" class="w-full py-2.5 rounded-xl glow-btn text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-purple-500/25 transition-all">
-                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    <span id="auth-submit-btn-text">Continue / Sign In</span>
+                    <span>Sign In / Create Account →</span>
                 </button>
             </form>
+
+            <div class="mt-4 text-center">
+                <button type="button" onclick="closeAuthModal()" class="text-[11px] text-slate-400 hover:text-white underline">
+                    Skip for now & Continue as Guest →
+                </button>
+            </div>
         </div>
     </div>
 
