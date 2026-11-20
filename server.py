@@ -152,7 +152,7 @@ async def read_index():
     p3 = os.path.join(os.getcwd(), "index.html")
     if os.path.exists(p3):
         return FileResponse(p3)
-    return HTMLResponse("<h1>ReelSnap Pro Backend Running. Please upload index.html</h1>")
+    return HTMLResponse("<!DOCTYPE html><html><head><meta name='monetag' content='19b823b0c187907ed37efdfd8c39343c'></head><body><h1>ReelSnap Pro Backend Running.</h1></body></html>")
 
 @app.get("/static/app.js")
 @app.get("/app.js")
