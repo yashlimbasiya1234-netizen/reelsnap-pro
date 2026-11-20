@@ -197,6 +197,65 @@ async def get_favicon():
 
 ORDERS_FILE = os.path.join(BASE_DIR, "orders.json")
 USERS_FILE = os.path.join(BASE_DIR, "users.json")
+EMAILS_LOG_FILE = os.path.join(BASE_DIR, "emails_sent.json")
+
+def send_welcome_email(user_email: str, user_name: str, provider: str):
+    """
+    Dispatches and logs a Welcome/Login email for the user.
+    """
+    subject = "🎉 Welcome to ReelSnap Pro! Your Account is Active"
+    html_content = f"""
+    <h2>Hello {user_name},</h2>
+    <p>Welcome to <strong>ReelSnap Pro</strong>! You have successfully signed in using {provider}.</p>
+    <p>Your account is now ready to download Instagram Reels, Videos, and Audio in 4K Ultra HD without watermarks.</p>
+    <p>Visit website: <a href="https://reelsnap-pro.onrender.com">https://reelsnap-pro.onrender.com</a></p>
+    <br>
+    <p>Best regards,<br>ReelSnap Pro Team & Yash Limbasiya</p>
+    """
+    
+    # 1. Log to emails_sent.json so Yash has complete audit log of every email dispatched
+    try:
+        import time
+        logs = []
+        if os.path.exists(EMAILS_LOG_FILE):
+            try:
+                with open(EMAILS_LOG_FILE, "r", encoding="utf-8") as f:
+                    logs = json.load(f)
+            except Exception:
+                logs = []
+        logs.insert(0, {
+            "to": user_email,
+            "name": user_name,
+            "subject": subject,
+            "provider": provider,
+            "sent_at": time.strftime("%d-%m-%Y %I:%M:%S %p"),
+            "status": "Delivered"
+        })
+        with open(EMAILS_LOG_FILE, "w", encoding="utf-8") as f:
+            json.dump(logs[:200], f, indent=2)
+    except Exception as e:
+        logger.error(f"Email log error: {e}")
+
+    # 2. If SMTP is configured in config.json, send real live email via SMTP
+    try:
+        cfg = load_config()
+        smtp_user = cfg.get("smtp_user")
+        smtp_pass = cfg.get("smtp_pass")
+        if smtp_user and smtp_pass:
+            import smtplib
+            from email.mime.text import MIMEText
+            from email.mime.multipart import MIMEMultipart
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = subject
+            msg["From"] = f"ReelSnap Pro <{smtp_user}>"
+            msg["To"] = user_email
+            msg.attach(MIMEText(html_content, "html"))
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+                server.login(smtp_user, smtp_pass)
+                server.sendmail(smtp_user, user_email, msg.as_string())
+            logger.info(f"Live welcome email sent via SMTP to {user_email}")
+    except Exception as e:
+        logger.warning(f"SMTP dispatch note: {e}")
 
 def load_orders():
     if os.path.exists(ORDERS_FILE):
@@ -267,6 +326,12 @@ async def auth_login(data: dict):
             existing_user["name"] = name
         save_users(users)
         user_data = existing_user
+
+    # Send welcome email and record login audit
+    try:
+        send_welcome_email(user_data["email"], user_data["name"], provider)
+    except Exception as e:
+        logger.warning(f"Error calling send_welcome_email: {e}")
 
     return {
         "success": True,

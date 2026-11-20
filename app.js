@@ -28,9 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Auto-prompt Sign In / Sign Up when website opens!
     const user = getUserSession();
     if (!user || !user.isLoggedIn) {
-        setTimeout(() => {
-            openAuthModal();
-        }, 800);
+        openAuthModal();
+        document.body.style.overflow = "hidden";
+    } else {
+        closeAuthModal();
+        document.body.style.overflow = "";
     }
 });
 
@@ -129,6 +131,15 @@ function loadSampleLink() {
 // Download form submission
 async function handleDownloadSubmit(e) {
     e.preventDefault();
+
+    // Mandatory Login Check
+    const user = getUserSession();
+    if (!user || !user.isLoggedIn) {
+        openAuthModal();
+        showToast("⚠️ રીલ ડાઉનલોડ કરવા માટે પહેલાં Sign In કરો!");
+        return;
+    }
+
     const input = document.getElementById("reel-url-input");
     const url = input.value.trim();
 
@@ -713,6 +724,7 @@ async function loginWithGoogle() {
             user.provider = "Google";
             saveUserSession(user);
 
+            renderUserAccount();
             closeAuthModal();
             showToast(`🌐 Signed in with Google as ${data.user.email}!`);
         }
@@ -724,6 +736,7 @@ async function loginWithGoogle() {
         user.isLoggedIn = true;
         user.provider = "Google";
         saveUserSession(user);
+        renderUserAccount();
         closeAuthModal();
         showToast(`🌐 Signed in with Google as ${googleEmail}!`);
     }
@@ -731,12 +744,25 @@ async function loginWithGoogle() {
 
 // Auth Handlers
 function openAuthModal() {
-    document.getElementById("auth-modal").classList.remove("hidden");
+    const modal = document.getElementById("auth-modal");
+    if (modal) {
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+    }
     if (window.lucide) lucide.createIcons();
 }
 
 function closeAuthModal() {
-    document.getElementById("auth-modal").classList.add("hidden");
+    const user = getUserSession();
+    if (!user || !user.isLoggedIn) {
+        showToast("⚠️ સાઇટ વાપરવા માટે લોગિન કરવું ફરજિયાત છે!");
+        return; // Prevent closing without login
+    }
+    const modal = document.getElementById("auth-modal");
+    if (modal) {
+        modal.classList.add("hidden");
+        document.body.style.overflow = "";
+    }
 }
 
 async function handleAuthSubmit(e) {
@@ -773,8 +799,9 @@ async function handleAuthSubmit(e) {
         saveUserSession(user);
     }
 
+    renderUserAccount();
     closeAuthModal();
-    showToast(`🎉 Welcome, ${email}! Signed in successfully.`);
+    showToast(`🎉 Welcome, ${email}! You're logged in.`);
 }
 
 function logoutUser() {
@@ -785,8 +812,31 @@ function logoutUser() {
         expiry: null
     };
     saveUserSession(user);
-    showToast("👋 You have been logged out.");
+    renderUserAccount();
     closeSettingsModal();
+    openAuthModal();
+    showToast("👋 You have been logged out. Please sign in again.");
+}
+
+function exportUsersCsv() {
+    fetch("/api/admin/users")
+        .then(r => r.json())
+        .then(data => {
+            const users = data.users || [];
+            let csv = "User_ID,Name,Email,Provider,Plan,Created_At,Last_Login\n";
+            users.forEach(u => {
+                csv += `"${u.id || ''}","${u.name || ''}","${u.email || ''}","${u.provider || ''}","${u.plan || ''}","${u.created_at || ''}","${u.last_login || ''}"\n`;
+            });
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `reelsnap_registered_users_${Date.now()}.csv`;
+            a.click();
+            showToast("📥 Exported users CSV file successfully!");
+        })
+        .catch(() => showToast("❌ Error exporting users list"));
+}
 }
 
 // Registered Users Record (For Yash / Admin)
@@ -823,7 +873,15 @@ async function toggleUsersRecord() {
                 return;
             }
 
-            container.innerHTML = users.map(u => `
+            const headerHtml = `
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
+                    <span class="text-[10px] text-slate-400 font-bold uppercase">Total Users: ${users.length}</span>
+                    <button onclick="exportUsersCsv()" class="px-2 py-1 rounded bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 text-[10px] font-bold border border-purple-500/30 flex items-center gap-1 transition-all">
+                        <span>📥 Export to CSV</span>
+                    </button>
+                </div>
+            `;
+            container.innerHTML = headerHtml + users.map(u => `
                 <div class="p-2 rounded-xl bg-white/5 border border-white/5 text-[11px] flex items-center justify-between">
                     <div>
                         <div class="flex items-center gap-1.5 font-bold text-white">
