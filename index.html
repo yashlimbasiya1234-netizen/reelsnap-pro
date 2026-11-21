@@ -234,12 +234,13 @@
                 <div class="flex flex-col md:flex-row gap-6 items-center">
                     
                     <!-- Media Preview Box -->
-                    <div class="relative w-full md:w-56 shrink-0 aspect-[9/16] max-h-72 rounded-xl overflow-hidden bg-black/60 border border-white/10 group">
+                    <div class="relative w-full md:w-56 shrink-0 aspect-[9/16] max-h-72 rounded-xl overflow-hidden bg-black border border-white/10 group">
                         <img id="res-thumbnail" src="" alt="Reel Thumbnail" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
+                        <video id="res-video-player" controls playsinline preload="metadata" class="w-full h-full object-cover hidden"></video>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3 pointer-events-none" id="res-thumb-overlay">
                             <span id="res-duration" class="text-[11px] font-bold px-2 py-0.5 rounded bg-black/70 text-slate-200 backdrop-blur-sm">0:30</span>
                         </div>
-                        <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-pink-600/90 text-white text-[10px] font-bold tracking-wide uppercase">
+                        <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-pink-600/90 text-white text-[10px] font-bold tracking-wide uppercase pointer-events-none">
                             Reel HD
                         </div>
                     </div>

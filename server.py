@@ -636,7 +636,7 @@ async def download_proxy(
             await resp.aclose()
             await client.aclose()
             logger.warning(f"CDN returned status {resp.status_code}, redirecting directly to source.")
-            return RedirectResponse(url=target_url, status_code=307)
+            return RedirectResponse(url=target_url, status_code=302)
 
         content_length = resp.headers.get("content-length")
 
@@ -664,7 +664,7 @@ async def download_proxy(
 
     except Exception as e:
         logger.error(f"Download streaming error: {e}")
-        return RedirectResponse(url=target_url, status_code=307)
+        return RedirectResponse(url=target_url, status_code=302)
 
 @app.post("/api/premium/verify")
 async def verify_premium(data: dict):

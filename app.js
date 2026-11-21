@@ -196,6 +196,8 @@ async function handleDownloadSubmit(e) {
 function renderResult(data) {
     const resultCard = document.getElementById("result-card");
     const thumb = document.getElementById("res-thumbnail");
+    const videoPlayer = document.getElementById("res-video-player");
+    const thumbOverlay = document.getElementById("res-thumb-overlay");
     const title = document.getElementById("res-title");
     const author = document.getElementById("res-author");
     const duration = document.getElementById("res-duration");
@@ -205,6 +207,18 @@ function renderResult(data) {
     title.innerText = data.title || "Instagram Reel";
     author.innerText = data.author || "@instagram_user";
     duration.innerText = data.duration || "0:30";
+
+    const streamUrl = (data.qualities && data.qualities[0] && data.qualities[0].direct_url) || data.direct_url;
+    if (streamUrl && videoPlayer) {
+        videoPlayer.src = streamUrl;
+        videoPlayer.classList.remove("hidden");
+        thumb.classList.add("hidden");
+        if (thumbOverlay) thumbOverlay.classList.add("hidden");
+    } else {
+        if (videoPlayer) videoPlayer.classList.add("hidden");
+        thumb.classList.remove("hidden");
+        if (thumbOverlay) thumbOverlay.classList.remove("hidden");
+    }
 
     qualitiesContainer.innerHTML = "";
     data.qualities.forEach((q, idx) => {
@@ -229,25 +243,28 @@ function renderResult(data) {
                 </div>
             </div>
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                <button 
-                    type="button"
-                    onclick="downloadReelFile('${q.download_url}', 'ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}', '${q.direct_url || ''}')"
+                <a 
+                    href="${q.download_url}" 
+                    download="ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onclick="showToast('⚡ Starting download... Saving file to your device');"
                     class="px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 ${btnClass} transition-all grow sm:grow-0 shadow-lg cursor-pointer text-white"
                 >
                     <i data-lucide="download" class="w-4 h-4"></i>
                     <span>Download (${q.format})</span>
-                </button>
+                </a>
                 ${q.direct_url ? `
                 <a 
                     href="${q.direct_url}" 
                     target="_blank" 
                     rel="noreferrer"
                     download="Instagram_${data.id}.mp4"
-                    title="Direct Instagram CDN Video Stream"
-                    class="px-3 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white bg-white/10 hover:bg-white/15 border border-white/10 flex items-center gap-1.5 transition-all"
+                    title="Direct Instagram Video Stream"
+                    class="px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white bg-white/10 hover:bg-white/15 border border-white/10 flex items-center gap-1.5 transition-all shadow-md"
                 >
-                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                    <span>Mirror Link</span>
+                    <i data-lucide="play" class="w-3.5 h-3.5 text-pink-400"></i>
+                    <span>Direct Link</span>
                 </a>
                 ` : ''}
             </div>
