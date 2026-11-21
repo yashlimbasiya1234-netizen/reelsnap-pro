@@ -38,7 +38,7 @@
     <!-- Canvas Confetti for VIP celebration -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <link rel="stylesheet" href="/style.css?v=20261121_V3_CLEAN">
+    <link rel="stylesheet" href="/style.css?v=20261121_MAX_ADS">
 </head>
 <body class="bg-[#080B14] text-slate-100 min-h-screen relative selection:bg-purple-500 selection:text-white">
 
@@ -98,8 +98,8 @@
         </div>
     </nav>
 
-    <!-- Side Rail Ads (Positioned neatly on sides so center downloader is completely unobstructed) -->
-    <div id="side-ad-left" class="fixed left-3 top-32 z-30 hidden 2xl:flex flex-col w-40 p-3 rounded-2xl bg-[#0b1120]/90 border border-purple-500/20 shadow-2xl backdrop-blur-md text-center">
+    <!-- Side Rail Ads (Positioned neatly on sides for all laptops and desktops) -->
+    <div id="side-ad-left" class="fixed left-3 top-32 z-30 hidden xl:flex flex-col w-40 p-3 rounded-2xl bg-[#0b1120]/90 border border-purple-500/20 shadow-2xl backdrop-blur-md text-center">
         <span class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mb-2">Sponsored Ad</span>
         <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center mx-auto mb-2">
             <i data-lucide="sparkles" class="w-5 h-5"></i>
@@ -112,7 +112,7 @@
         <button onclick="closeAd('side-ad-left')" class="text-[10px] text-slate-500 hover:text-slate-300 mt-2">Close ✕</button>
     </div>
 
-    <div id="side-ad-right" class="fixed right-3 top-32 z-30 hidden 2xl:flex flex-col w-40 p-3 rounded-2xl bg-[#0b1120]/90 border border-purple-500/20 shadow-2xl backdrop-blur-md text-center">
+    <div id="side-ad-right" class="fixed right-3 top-32 z-30 hidden xl:flex flex-col w-40 p-3 rounded-2xl bg-[#0b1120]/90 border border-purple-500/20 shadow-2xl backdrop-blur-md text-center">
         <span class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mb-2">Sponsored Ad</span>
         <div class="w-10 h-10 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center mx-auto mb-2">
             <i data-lucide="flame" class="w-5 h-5"></i>
@@ -123,6 +123,31 @@
             Open →
         </a>
         <button onclick="closeAd('side-ad-right')" class="text-[10px] text-slate-500 hover:text-slate-300 mt-2">Close ✕</button>
+    </div>
+
+    <!-- Top Leaderboard Banner Ad (Visible on Mobile & Desktop) -->
+    <div id="top-ad-wrapper" class="max-w-4xl mx-auto px-4 pt-4 pb-1">
+        <div class="ad-slot-box p-3 sm:p-4 text-center bg-gradient-to-r from-[#0c1222] via-[#151c33] to-[#0c1222] border border-purple-500/30 rounded-2xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3 relative overflow-hidden">
+            <span class="ad-badge bg-black/70 text-purple-300">SPONSORED AD</span>
+            <div class="flex items-center gap-3 text-left">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h4 class="text-xs sm:text-sm font-bold text-white">4K AI Video Enhancer 2026</h4>
+                        <span class="text-[9px] px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 font-black">PROMO</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300">Turn normal reels into 4K 60FPS Ultra HD with 1-click AI tools.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <a href="https://reelsnap-pro.onrender.com/#ad" target="_blank" class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:brightness-110 text-white font-bold text-xs shadow-md transition-all">
+                    Claim Free Trial →
+                </a>
+                <button onclick="closeAd('top-ad-wrapper')" class="text-slate-400 hover:text-slate-200 text-xs px-2 py-1">✕</button>
+            </div>
+        </div>
     </div>
 
     <!-- Main Container -->
@@ -706,6 +731,9 @@
     <!-- Interstitial Ad & Countdown Modal (High Revenue Ad Impression) -->
     <div id="countdown-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="z-index: 99999;">
         <div class="modal-solid-card p-6 max-w-md w-full relative border-purple-500/40 text-center space-y-4 glow-primary">
+            <button onclick="skipCountdownNow()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-all z-10" title="Close Ad">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
             <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-purple-500/20 text-purple-400 font-black text-2xl brand-font mx-auto" id="countdown-timer-num">
                 3
             </div>
@@ -1258,7 +1286,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="/app.js?v=20261121_V3_CLEAN"></script>
+    <script src="/app.js?v=20261121_MAX_ADS"></script>
     <script>
         // Initialize Lucide icons
         lucide.createIcons();

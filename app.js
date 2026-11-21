@@ -130,7 +130,7 @@ function checkVipStatus() {
 }
 
 function showAllAds() {
-    const adIds = ["side-ad-left", "side-ad-right", "result-native-ad", "mid-ad-wrapper", "bottom-sticky-ad"];
+    const adIds = ["side-ad-left", "side-ad-right", "top-ad-wrapper", "result-native-ad", "mid-ad-wrapper", "bottom-sticky-ad"];
     adIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.removeProperty("display");
@@ -138,7 +138,7 @@ function showAllAds() {
 }
 
 function hideAllAds() {
-    const adIds = ["side-ad-left", "side-ad-right", "result-native-ad", "mid-ad-wrapper", "bottom-sticky-ad"];
+    const adIds = ["side-ad-left", "side-ad-right", "top-ad-wrapper", "result-native-ad", "mid-ad-wrapper", "bottom-sticky-ad", "welcome-ad-modal", "countdown-modal"];
     adIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.setProperty("display", "none", "important");
@@ -267,15 +267,14 @@ function renderResult(data) {
                 </div>
             </div>
             <div class="flex items-center w-full sm:w-auto justify-end">
-                <a 
-                    href="${q.download_url}" 
-                    download="ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}"
-                    onclick="handleDownloadClick('ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}')"
-                    class="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 ${btnClass} transition-all shadow-lg cursor-pointer text-white"
+                <button 
+                    type="button"
+                    onclick="initiateAdCountdown('${q.download_url}', 'ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}')"
+                    class="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 ${btnClass} transition-all shadow-lg cursor-pointer text-white hover:scale-[1.02]"
                 >
                     <i data-lucide="download" class="w-4 h-4"></i>
                     <span>Download (${q.format})</span>
-                </a>
+                </button>
             </div>
         `;
         qualitiesContainer.appendChild(item);
@@ -287,55 +286,127 @@ function renderResult(data) {
     resultCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
-// 100% Reliable File Downloader
-function handleDownloadClick(filename) {
-    showToast("⚡ Starting download... Saving file to your device");
-    setTimeout(() => {
-        openDownloadSuccessModal(filename);
-    }, 2200);
+// 100% Guaranteed Download & High-CPM Ad Flow
+let currentDownloadFilename = "ReelSnap_video.mp4";
+
+function initiateAdCountdown(downloadUrl, filename) {
+    currentDownloadUrl = downloadUrl;
+    currentDownloadFilename = filename || "ReelSnap_video.mp4";
+
+    // If VIP user or ads disabled, download instantly with zero ads
+    if (isVipUser || !siteConfig.ads_enabled) {
+        startRealDownload(currentDownloadUrl, currentDownloadFilename);
+        return;
+    }
+
+    // Show Countdown Ad Modal
+    const modal = document.getElementById("countdown-modal");
+    const timerNum = document.getElementById("countdown-timer-num");
+    const skipBtn = document.getElementById("skip-countdown-btn");
+
+    if (modal) {
+        modal.classList.remove("hidden");
+        modal.style.display = "flex";
+        if (window.lucide) lucide.createIcons();
+    }
+
+    let timeLeft = 3;
+    if (timerNum) timerNum.innerText = timeLeft;
+    if (skipBtn) skipBtn.innerHTML = `<span>Wait ${timeLeft}s</span>`;
+
+    if (countdownTimer) clearInterval(countdownTimer);
+
+    countdownTimer = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+            if (timerNum) timerNum.innerText = timeLeft;
+            if (skipBtn) skipBtn.innerHTML = `<span>Wait ${timeLeft}s</span>`;
+        } else {
+            clearInterval(countdownTimer);
+            if (timerNum) timerNum.innerHTML = `<i data-lucide="check" class="w-7 h-7 text-emerald-400"></i>`;
+            if (skipBtn) skipBtn.innerHTML = `
+                <button type="button" onclick="skipCountdownNow()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-500/25 transition-all">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span>Download File Now</span>
+                </button>
+            `;
+            if (window.lucide) lucide.createIcons();
+
+            // Automatically start downloading the file to device
+            startRealDownload(currentDownloadUrl, currentDownloadFilename);
+
+            setTimeout(() => {
+                if (modal) {
+                    modal.classList.add("hidden");
+                    modal.style.display = "none";
+                }
+                // Open post-download success ad modal
+                openDownloadSuccessModal(currentDownloadFilename);
+            }, 1200);
+        }
+    }, 1000);
 }
 
-function triggerFileDownload(e, downloadUrl, filename, directUrl) {
-    if (e && e.preventDefault) e.preventDefault();
-    showToast("⚡ Starting download... Saving file to your device");
-    const targetUrl = downloadUrl || directUrl;
-    
-    // Trigger direct browser download without opening blank tabs
+function skipCountdownNow() {
+    if (countdownTimer) clearInterval(countdownTimer);
+    const modal = document.getElementById("countdown-modal");
+    if (modal) {
+        modal.classList.add("hidden");
+        modal.style.display = "none";
+    }
+    startRealDownload(currentDownloadUrl, currentDownloadFilename);
+    setTimeout(() => {
+        openDownloadSuccessModal(currentDownloadFilename);
+    }, 1200);
+}
+
+function startRealDownload(url, filename) {
+    showToast("⚡ Starting high-speed file download...");
+    const fname = filename || "ReelSnap_Instagram_Video.mp4";
     const a = document.createElement("a");
-    a.href = targetUrl;
-    a.setAttribute("download", filename);
-    a.style.display = "none";
+    a.href = url;
+    a.setAttribute("download", fname);
     document.body.appendChild(a);
     a.click();
     setTimeout(() => {
         if (a.parentNode) document.body.removeChild(a);
-    }, 1500);
+    }, 1200);
+}
 
-    // Open download success sponsored ad modal after 2 seconds
-    // (Fulfills user requirement: "dowload thay ne save thay tyare add avi joi aevu kaR")
-    setTimeout(() => {
-        openDownloadSuccessModal(filename);
-    }, 2000);
+function handleDownloadClick(filename) {
+    initiateAdCountdown(currentDownloadUrl, filename);
+}
+
+function triggerFileDownload(e, downloadUrl, filename, directUrl) {
+    if (e && e.preventDefault) e.preventDefault();
+    initiateAdCountdown(downloadUrl, filename);
 }
 
 function downloadReelFile(url, filename, directUrl) {
-    triggerFileDownload(null, url, filename, directUrl);
+    initiateAdCountdown(url, filename);
 }
 
 // Download Success Modal Handlers
 function openDownloadSuccessModal(filename) {
+    if (isVipUser) return;
     const modal = document.getElementById("download-success-ad-modal");
     const nameEl = document.getElementById("saved-filename-text");
     if (nameEl && filename) {
         nameEl.innerText = `File "${filename}" saved in your Downloads folder.`;
     }
-    if (modal) modal.classList.remove("hidden");
+    if (modal) {
+        modal.classList.remove("hidden");
+        modal.style.display = "flex";
+    }
     if (window.lucide) lucide.createIcons();
 }
 
 function closeDownloadSuccessModal() {
     const modal = document.getElementById("download-success-ad-modal");
-    if (modal) modal.classList.add("hidden");
+    if (modal) {
+        modal.classList.add("hidden");
+        modal.style.display = "none";
+    }
 }
 
 function focusDownloadInput() {
@@ -346,77 +417,8 @@ function focusDownloadInput() {
     }
 }
 
-// Download Trigger with Interstitial Ad & Countdown
 function triggerAdOrDownload(downloadUrl) {
-    currentDownloadUrl = downloadUrl;
-
-    // If user is VIP or Ads are disabled or countdown is 0, download immediately!
-    const countdownSec = siteConfig.download_countdown_seconds !== undefined ? siteConfig.download_countdown_seconds : 4;
-    if (isVipUser || !siteConfig.ads_enabled || countdownSec === 0) {
-        startRealDownload(downloadUrl);
-        return;
-    }
-
-    // Show Countdown Ad Modal
-    const modal = document.getElementById("countdown-modal");
-    const timerNum = document.getElementById("countdown-timer-num");
-    const skipBtn = document.getElementById("skip-countdown-btn");
-
-    modal.classList.remove("hidden");
-    if (window.lucide) lucide.createIcons();
-
-    let timeLeft = countdownSec;
-    timerNum.innerText = timeLeft;
-    skipBtn.innerHTML = `<span>Wait ${timeLeft}s</span>`;
-
-    if (countdownTimer) clearInterval(countdownTimer);
-
-    countdownTimer = setInterval(() => {
-        timeLeft--;
-        if (timeLeft > 0) {
-            timerNum.innerText = timeLeft;
-            skipBtn.innerHTML = `<span>Wait ${timeLeft}s</span>`;
-        } else {
-            clearInterval(countdownTimer);
-            timerNum.innerHTML = `<i data-lucide="check" class="w-7 h-7 text-emerald-400"></i>`;
-            skipBtn.innerHTML = `
-                <a href="${currentDownloadUrl}" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-emerald-500/25 transition-all">
-                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                    <span>Download File Now</span>
-                </a>
-            `;
-            if (window.lucide) lucide.createIcons();
-            startRealDownload(currentDownloadUrl);
-            setTimeout(() => {
-                modal.classList.add("hidden");
-            }, 3500);
-        }
-    }, 1000);
-}
-
-function skipCountdownNow() {
-    if (countdownTimer) clearInterval(countdownTimer);
-    document.getElementById("countdown-modal").classList.add("hidden");
-    startRealDownload(currentDownloadUrl);
-}
-
-function startRealDownload(url) {
-    showToast("⚡ Starting high-speed file download...");
-    try {
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "ReelSnap_Instagram_Video.mp4";
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(() => a.remove(), 1000);
-    } catch (e) {
-        console.error("Anchor click failed:", e);
-    }
-
-    // Direct browser download trigger (guaranteed not blocked by browser security)
-    setTimeout(() => {
-        window.location.href = url;
-    }, 400);
+    initiateAdCountdown(downloadUrl, "ReelSnap_Video.mp4");
 }
 
 // Reset Downloader
