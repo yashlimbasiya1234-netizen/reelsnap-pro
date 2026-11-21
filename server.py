@@ -242,6 +242,46 @@ async def get_style_css():
             return FileResponse(p, media_type="text/css", headers={"Cache-Control": "no-cache, must-revalidate"})
     raise HTTPException(status_code=404, detail="style.css not found")
 
+@app.get("/robots.txt")
+async def get_robots_txt():
+    p = os.path.join(BASE_DIR, "robots.txt")
+    if os.path.exists(p):
+        return FileResponse(p, media_type="text/plain")
+    from fastapi.responses import PlainTextResponse
+    return PlainTextResponse("User-agent: *\nAllow: /\nSitemap: https://reelsnap-pro.onrender.com/sitemap.xml\n")
+
+@app.get("/sitemap.xml")
+async def get_sitemap_xml():
+    p = os.path.join(BASE_DIR, "sitemap.xml")
+    if os.path.exists(p):
+        return FileResponse(p, media_type="application/xml")
+    from fastapi.responses import Response
+    return Response(content="""<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://reelsnap-pro.onrender.com/</loc><priority>1.0</priority></url></urlset>""", media_type="application/xml")
+
+@app.get("/reelsnap2026indexkey.txt")
+async def get_indexnow_key():
+    from fastapi.responses import PlainTextResponse
+    return PlainTextResponse("reelsnap2026indexkey\n")
+
+@app.on_event("startup")
+async def on_startup():
+    # 1. Trigger automated SEO Indexing Ping in background
+    try:
+        from auto_seo_pinger import periodic_runner
+        asyncio.create_task(periodic_runner(interval_hours=8))
+        logger.info("Auto SEO Pinger task scheduled.")
+    except Exception as e:
+        logger.warning(f"Startup SEO pinger note: {e}")
+
+    # 2. If Telegram Bot Token is set, launch Telegram Bot background task
+    try:
+        from telegram_bot import run_telegram_bot, get_bot_token
+        if get_bot_token():
+            asyncio.create_task(run_telegram_bot())
+            logger.info("Auto Telegram Bot task scheduled.")
+    except Exception as e:
+        logger.warning(f"Startup Telegram bot note: {e}")
+
 SW_CONTENT = """self.options = {
     "domain": "5gvci.com",
     "zoneId": 12310697

@@ -42,6 +42,24 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         showWelcomeAd();
     }, 700);
+
+    // Auto-fill and auto-download if link passed via query parameters (?url=... or ?reel=...)
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const autoLink = urlParams.get("url") || urlParams.get("reel") || urlParams.get("link");
+        if (autoLink) {
+            const input = document.getElementById("reel-url-input");
+            if (input) {
+                input.value = autoLink.startsWith("http") ? autoLink : `https://www.instagram.com/reel/${autoLink}/`;
+                setTimeout(() => {
+                    const submitBtn = document.getElementById("submit-btn");
+                    if (submitBtn) submitBtn.click();
+                }, 600);
+            }
+        }
+    } catch (e) {
+        console.warn("Auto-url param parse note:", e);
+    }
 });
 
 // Welcome / Entry Ad Handlers
