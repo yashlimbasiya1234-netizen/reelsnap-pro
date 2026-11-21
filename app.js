@@ -246,9 +246,7 @@ function renderResult(data) {
                 <a 
                     href="${q.download_url}" 
                     download="ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onclick="showToast('⚡ Starting download... Saving file to your device');"
+                    onclick="triggerFileDownload(event, '${q.download_url}', 'ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}', '${q.direct_url || ''}')"
                     class="px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 ${btnClass} transition-all grow sm:grow-0 shadow-lg cursor-pointer text-white"
                 >
                     <i data-lucide="download" class="w-4 h-4"></i>
@@ -279,11 +277,12 @@ function renderResult(data) {
 }
 
 // 100% Reliable File Downloader
-function downloadReelFile(url, filename, directUrl) {
-    showToast("⚡ Starting download...");
-    const targetUrl = url || directUrl;
+function triggerFileDownload(e, downloadUrl, filename, directUrl) {
+    if (e && e.preventDefault) e.preventDefault();
+    showToast("⚡ Starting download... Saving file to your device");
+    const targetUrl = downloadUrl || directUrl;
     
-    // Trigger direct browser download
+    // Trigger direct browser download without opening blank tabs
     const a = document.createElement("a");
     a.href = targetUrl;
     a.setAttribute("download", filename);
@@ -294,7 +293,15 @@ function downloadReelFile(url, filename, directUrl) {
         if (a.parentNode) document.body.removeChild(a);
     }, 1500);
 
-    showToast("✅ Download started! Saving to your Downloads folder.");
+    // Open download success sponsored ad modal after 2 seconds
+    // (Fulfills user requirement: "dowload thay ne save thay tyare add avi joi aevu kaR")
+    setTimeout(() => {
+        openDownloadSuccessModal(filename);
+    }, 2000);
+}
+
+function downloadReelFile(url, filename, directUrl) {
+    triggerFileDownload(null, url, filename, directUrl);
 }
 
 // Download Success Modal Handlers
@@ -787,19 +794,28 @@ function renderUserAccount() {
     if (window.lucide) lucide.createIcons();
 }
 
+let currentGoogleLoginMode = "normal";
+
 // Official Google Sign-In Modals & Actions
 function openGoogleModal() {
     const modal = document.getElementById("google-signin-modal");
-    if (modal) modal.classList.remove("hidden");
+    if (modal) {
+        modal.classList.remove("hidden");
+        modal.style.display = "flex";
+    }
     if (window.lucide) lucide.createIcons();
 }
 
 function closeGoogleModal() {
     const modal = document.getElementById("google-signin-modal");
-    if (modal) modal.classList.add("hidden");
+    if (modal) {
+        modal.classList.add("hidden");
+        modal.style.display = "none";
+    }
 }
 
-function loginWithGoogle() {
+function loginWithGoogle(mode = "normal") {
+    currentGoogleLoginMode = mode;
     openGoogleModal();
 }
 
@@ -816,6 +832,8 @@ async function executeGoogleLogin(email, name) {
         submitBtn.disabled = true;
     }
 
+    const isVipFlow = currentGoogleLoginMode === "vip";
+
     try {
         const res = await fetch("/api/auth/login", {
             method: "POST",
@@ -823,7 +841,9 @@ async function executeGoogleLogin(email, name) {
             body: JSON.stringify({
                 email: email,
                 name: name,
-                provider: "Google"
+                provider: isVipFlow ? "Google VIP" : "Google",
+                is_vip: isVipFlow,
+                plan: isVipFlow ? "VIP Lifetime" : "Free Plan"
             })
         });
         const data = await res.json();
@@ -833,6 +853,11 @@ async function executeGoogleLogin(email, name) {
             user.name = data.user.name;
             user.isLoggedIn = true;
             user.provider = "Google";
+            if (isVipFlow) {
+                user.isVip = true;
+                user.plan = "VIP Lifetime";
+                user.expiry = null;
+            }
             saveUserSession(user);
         }
     } catch (e) {
@@ -842,6 +867,11 @@ async function executeGoogleLogin(email, name) {
         user.name = name;
         user.isLoggedIn = true;
         user.provider = "Google";
+        if (isVipFlow) {
+            user.isVip = true;
+            user.plan = "VIP Lifetime";
+            user.expiry = null;
+        }
         saveUserSession(user);
     }
 
@@ -853,9 +883,22 @@ async function executeGoogleLogin(email, name) {
     closeGoogleModal();
     const authModal = document.getElementById("auth-modal");
     if (authModal) authModal.classList.add("hidden");
+
+    if (isVipFlow) {
+        isVipUser = true;
+        hideAllAds();
+        closeVipModal();
+        if (window.confetti) {
+            confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+        }
+        showToast(`👑 Welcome ${name}! Google VIP Pass linked & all ads removed permanently.`);
+    } else {
+        showToast(`🌐 Welcome, ${name}! Signed in via Google.`);
+    }
+
     document.body.style.overflow = "";
+    checkVipStatus();
     renderUserAccount();
-    showToast(`🌐 Welcome, ${name}! Signed in via Google.`);
 }
 
 function handleCustomGoogleLogin(e) {

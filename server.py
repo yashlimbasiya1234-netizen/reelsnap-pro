@@ -139,7 +139,37 @@ async def extract_with_http_fallback(shortcode: str):
     except Exception as e:
         logger.warning(f"Embed fallback notice: {e}")
 
-    # Method 2: Internal API fallback
+    # Method 2: DDInstagram OpenGraph mirror fallback (Public CDN stream without login block)
+    dd_headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    }
+    try:
+        async with httpx.AsyncClient(timeout=8.0, follow_redirects=True) as client:
+            dd_url = f"https://www.ddinstagram.com/reel/{shortcode}/"
+            resp = await client.get(dd_url, headers=dd_headers)
+            if resp.status_code == 200:
+                html = resp.text
+                v_match = re.search(r'<meta\s+property="og:video"\s+content="([^"]+)"', html) or re.search(r'<meta\s+name="twitter:player:stream"\s+content="([^"]+)"', html)
+                t_match = re.search(r'<meta\s+property="og:image"\s+content="([^"]+)"', html)
+                title_match = re.search(r'<meta\s+property="og:title"\s+content="([^"]+)"', html)
+                if v_match:
+                    video_url = v_match.group(1).replace("&amp;", "&")
+                    thumb_url = t_match.group(1).replace("&amp;", "&") if t_match else None
+                    title_text = title_match.group(1) if title_match else f"Instagram Reel #{shortcode}"
+                    return {
+                        "id": shortcode,
+                        "title": title_text[:60] + "..." if len(title_text) > 60 else title_text,
+                        "author": "@instagram_creator",
+                        "thumbnail": thumb_url,
+                        "duration": "0:30",
+                        "video_url": video_url,
+                        "audio_url": video_url
+                    }
+    except Exception as e:
+        logger.warning(f"DDInstagram fallback notice: {e}")
+
+    # Method 3: Internal API fallback
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
         "Accept-Language": "en-US,en;q=0.9",
@@ -329,6 +359,8 @@ async def auth_login(data: dict):
     email = str(data.get("email", "")).strip().lower()
     name = str(data.get("name", "")).strip()
     provider = str(data.get("provider", "email")).strip()
+    is_vip = bool(data.get("is_vip", False))
+    plan = str(data.get("plan", "VIP Lifetime" if is_vip else "Free Plan")).strip()
 
     if not email:
         raise HTTPException(status_code=400, detail="Email is required")
@@ -352,7 +384,8 @@ async def auth_login(data: dict):
             "email": email,
             "name": name,
             "provider": provider,
-            "plan": "Free Plan",
+            "plan": plan,
+            "vip_active": is_vip or (plan != "Free Plan"),
             "expiry": None,
             "created_at": now_str,
             "last_login": now_str,
@@ -363,6 +396,9 @@ async def auth_login(data: dict):
         user_data = new_user
     else:
         existing_user["last_login"] = now_str
+        if is_vip:
+            existing_user["vip_active"] = True
+            existing_user["plan"] = "VIP Lifetime"
         if name and not existing_user.get("name"):
             existing_user["name"] = name
         save_users(users)
@@ -514,12 +550,19 @@ async def extract_reel(request: Request):
             detail="Invalid Instagram URL. Please paste a valid link like https://www.instagram.com/reel/XXXXX/"
         )
 
-    # 1. Try yt-dlp first
-    info = extract_with_ytdlp(raw_url)
+    # 1. Try yt-dlp with strict 4-second timeout so server never hangs
+    info = None
+    try:
+        info = await asyncio.wait_for(asyncio.to_thread(extract_with_ytdlp, raw_url), timeout=4.0)
+    except Exception as e:
+        logger.warning(f"yt-dlp quick check note: {e}")
 
     # 2. Try HTTP API Fallback
     if not info:
-        info = await extract_with_http_fallback(shortcode)
+        try:
+            info = await asyncio.wait_for(extract_with_http_fallback(shortcode), timeout=5.0)
+        except Exception as e:
+            logger.warning(f"HTTP fallback note: {e}")
 
     # 3. Graceful demo fallback if Instagram blocks server IP
     if not info:
@@ -622,6 +665,8 @@ async def download_proxy(
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
         "Accept": "*/*",
         "Accept-Encoding": "identity",
+        "Referer": "https://www.instagram.com/",
+        "Origin": "https://www.instagram.com",
     }
 
     try:
@@ -648,8 +693,11 @@ async def download_proxy(
                 await resp.aclose()
                 await client.aclose()
 
+        # Use application/octet-stream to force mobile and desktop browsers to save file instead of playing inline
+        download_mime = "application/octet-stream" if not clean_title.endswith(".mp3") else "audio/mpeg"
         response_headers = {
             "Content-Disposition": f'attachment; filename="{clean_title}"',
+            "Content-Type": download_mime,
             "Cache-Control": "no-cache",
             "Access-Control-Allow-Origin": "*",
         }
@@ -658,7 +706,7 @@ async def download_proxy(
 
         return StreamingResponse(
             stream_chunks(),
-            media_type=content_type,
+            media_type=download_mime,
             headers=response_headers
         )
 
