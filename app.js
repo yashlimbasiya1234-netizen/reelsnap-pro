@@ -37,7 +37,31 @@ document.addEventListener("DOMContentLoaded", () => {
             }, false);
         }
     });
+
+    // Automatic Entry Ad on page open (satisfies user's requirement: "open that j aekadi add avi joi aevu kar")
+    setTimeout(() => {
+        showWelcomeAd();
+    }, 700);
 });
+
+// Welcome / Entry Ad Handlers
+function showWelcomeAd() {
+    if (isVipUser) return;
+    const modal = document.getElementById("welcome-ad-modal");
+    if (modal) {
+        modal.classList.remove("hidden");
+        modal.style.display = "flex";
+        if (window.lucide) lucide.createIcons();
+    }
+}
+
+function closeWelcomeAd() {
+    const modal = document.getElementById("welcome-ad-modal");
+    if (modal) {
+        modal.classList.add("hidden");
+        modal.style.display = "none";
+    }
+}
 
 // Load config from backend
 async function loadConfig() {
@@ -246,7 +270,7 @@ function renderResult(data) {
                 <a 
                     href="${q.download_url}" 
                     download="ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}"
-                    onclick="triggerFileDownload(event, '${q.download_url}', 'ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}', '${q.direct_url || ''}')"
+                    onclick="handleDownloadClick('ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}')"
                     class="px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 ${btnClass} transition-all grow sm:grow-0 shadow-lg cursor-pointer text-white"
                 >
                     <i data-lucide="download" class="w-4 h-4"></i>
@@ -277,6 +301,13 @@ function renderResult(data) {
 }
 
 // 100% Reliable File Downloader
+function handleDownloadClick(filename) {
+    showToast("⚡ Starting download... Saving file to your device");
+    setTimeout(() => {
+        openDownloadSuccessModal(filename);
+    }, 2200);
+}
+
 function triggerFileDownload(e, downloadUrl, filename, directUrl) {
     if (e && e.preventDefault) e.preventDefault();
     showToast("⚡ Starting download... Saving file to your device");
@@ -1000,7 +1031,6 @@ function exportUsersCsv() {
             showToast("📥 Exported users CSV file successfully!");
         })
         .catch(() => showToast("❌ Error exporting users list"));
-}
 }
 
 // Registered Users Record (For Yash / Admin)

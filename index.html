@@ -38,7 +38,7 @@
     <!-- Canvas Confetti for VIP celebration -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <link rel="stylesheet" href="/style.css?v=20261121_FINAL_ADS">
+    <link rel="stylesheet" href="/style.css?v=20261121_V2_PERFECT">
 </head>
 <body class="bg-[#080B14] text-slate-100 min-h-screen relative selection:bg-purple-500 selection:text-white">
 
@@ -660,6 +660,49 @@
         </div>
     </div>
 
+    <!-- Welcome / Entry Sponsored Ad Modal (Opens once upon visiting the site) -->
+    <div id="welcome-ad-modal" onclick="if(event.target === this) closeWelcomeAd()" class="fixed inset-0 z-[100000] flex items-center justify-center p-4 modal-overlay hidden" style="background: rgba(3, 7, 18, 0.94) !important; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); z-index: 100000;">
+        <div class="p-6 sm:p-7 max-w-md w-full relative rounded-3xl border border-purple-500/40 shadow-2xl text-center glow-primary" style="background-color: #0b1120 !important; background: #0b1120 !important;">
+            <button onclick="closeWelcomeAd()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-all z-10" title="Close Ad">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-300 text-[10px] font-bold mb-3 uppercase tracking-wider">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-400"></i>
+                <span>Sponsored Partner Offer</span>
+            </div>
+
+            <!-- Ad Visual Box -->
+            <div class="my-2 p-5 rounded-2xl bg-gradient-to-tr from-purple-900/60 via-indigo-900/50 to-pink-900/60 border border-purple-500/30 text-left relative overflow-hidden shadow-inner">
+                <span class="ad-badge bg-black/70 text-purple-300">AD • SPONSORED</span>
+                <div class="flex items-center gap-3.5 mt-2">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-white shrink-0 shadow-lg shadow-purple-500/30">
+                        <i data-lucide="zap" class="w-7 h-7 fill-white"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-black text-white">4K AI Video Enhancer 2026</h4>
+                        <p class="text-xs text-slate-300 mt-0.5 leading-snug">Boost video resolution to 4K Ultra HD & 60 FPS in 1-click.</p>
+                        <span class="inline-block mt-1 text-[10px] text-amber-400 font-bold">⚡ Limited Time Free Trial</span>
+                    </div>
+                </div>
+
+                <a href="https://google.com" target="_blank" onclick="closeWelcomeAd()" class="mt-4 block w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 text-white font-extrabold text-xs text-center shadow-lg hover:brightness-110 transition-all uppercase tracking-wide">
+                    Claim Free Access Now →
+                </a>
+            </div>
+
+            <!-- Dismiss / Continue -->
+            <div class="mt-3 flex items-center justify-between text-xs text-slate-400 px-1">
+                <button onclick="closeWelcomeAd()" class="text-slate-400 hover:text-white text-xs underline font-medium">
+                    Continue to Free Downloader ✕
+                </button>
+                <button onclick="closeWelcomeAd(); openVipModal();" class="text-amber-400 hover:text-amber-300 text-xs font-bold flex items-center gap-1">
+                    <i data-lucide="crown" class="w-3.5 h-3.5 fill-amber-400"></i> Go Ad-Free (₹49)
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Interstitial Ad & Countdown Modal (High Revenue Ad Impression) -->
     <div id="countdown-modal" class="fixed inset-0 z-[9999] flex items-center justify-center p-4 modal-overlay hidden" style="z-index: 99999;">
         <div class="modal-solid-card p-6 max-w-md w-full relative border-purple-500/40 text-center space-y-4 glow-primary">
@@ -1215,7 +1258,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="/app.js?v=20261121_FINAL_ADS"></script>
+    <script src="/app.js?v=20261121_V2_PERFECT"></script>
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
