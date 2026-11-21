@@ -24,6 +24,19 @@ document.addEventListener("DOMContentLoaded", () => {
     renderUserAccount();
     checkVipStatus();
     initStatsTicker();
+
+    // Prevent ad scripts from hijacking user clicks on app controls, downloader, nav and modals
+    ["downloader", "main-nav", "vip-modal", "settings-modal", "auth-modal", "pricing", "how-it-works", "faq"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener("click", (e) => {
+                // Only let sponsored ad units open their links; never hijack UI clicks
+                if (!e.target.closest("#side-ad-left") && !e.target.closest("#side-ad-right") && !e.target.closest("#bottom-sticky-ad")) {
+                    e.stopPropagation();
+                }
+            }, false);
+        }
+    });
 });
 
 // Load config from backend
@@ -248,48 +261,23 @@ function renderResult(data) {
     resultCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
-// 100% Reliable File Downloader & Post-Download Ad Trigger
-async function downloadReelFile(url, filename, directUrl) {
-    showToast("⏳ Saving reel to your device...");
-    let saved = false;
+// 100% Reliable File Downloader
+function downloadReelFile(url, filename, directUrl) {
+    showToast("⚡ Starting download...");
+    const targetUrl = url || directUrl;
+    
+    // Trigger direct browser download
+    const a = document.createElement("a");
+    a.href = targetUrl;
+    a.setAttribute("download", filename);
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+        if (a.parentNode) document.body.removeChild(a);
+    }, 1500);
 
-    try {
-        const response = await fetch(url);
-        if (response.ok) {
-            const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = blobUrl;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            setTimeout(() => window.URL.revokeObjectURL(blobUrl), 30000);
-            saved = true;
-        }
-    } catch (e) {
-        console.warn("Blob fetch failed, falling back to direct navigation:", e);
-    }
-
-    if (!saved) {
-        const target = url || directUrl;
-        const a = document.createElement("a");
-        a.href = target;
-        a.download = filename;
-        a.target = "_blank";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
-
-    showToast("✅ Reel saved to your Downloads folder!");
-
-    // User requirement: "dowload thay ne save thay tyare add avi joi aevu kaR"
-    if (!isVipUser) {
-        setTimeout(() => {
-            openDownloadSuccessModal(filename);
-        }, 1200);
-    }
+    showToast("✅ Download started! Saving to your Downloads folder.");
 }
 
 // Download Success Modal Handlers
@@ -314,26 +302,6 @@ function focusDownloadInput() {
         input.value = "";
         input.focus();
     }
-}
-
-// User requirement: "3 tap pachi automatic add khule aevu kar"
-let userTapCount = 0;
-document.addEventListener("click", (e) => {
-    if (isVipUser) return; // VIP users never see ads
-    if (e.target.closest("#vip-modal") || e.target.closest("#settings-modal") || e.target.closest("#auth-modal")) return;
-
-    userTapCount++;
-    if (userTapCount % 3 === 0) {
-        triggerThreeTapAd();
-    }
-});
-
-function triggerThreeTapAd() {
-    if (isVipUser) return;
-    try {
-        window.open("https://reelsnap-pro.onrender.com/#ad-sponsored", "_blank");
-        showToast("📢 Sponsored partner ad loaded (Tap 3/3)");
-    } catch (e) {}
 }
 
 // Download Trigger with Interstitial Ad & Countdown
