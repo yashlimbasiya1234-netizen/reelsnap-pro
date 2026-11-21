@@ -4,7 +4,7 @@
   "ads_enabled": true,
   "download_countdown_seconds": 4,
   "adsense_client_id": "ca-pub-XXXXXXXXXXXXXXXX",
-  "custom_ad_script": "",
+  "custom_ad_script": "<script src=\"https://quge5.com/88/tag.min.js\" data-zone=\"313079\" async data-cfasync=\"false\"></script>",
   "upi_id": "yashlimbasiya1234-2@okaxis",
   "upi_name": "Yash Limbasiya",
   "vip_access_keys": ["VIP2026", "PREMIUM100", "REELPRO", "EARNMONEY"],
