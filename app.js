@@ -266,29 +266,16 @@ function renderResult(data) {
                     <span class="text-[10px] text-slate-400">${q.format} File • Direct Stream</span>
                 </div>
             </div>
-            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <div class="flex items-center w-full sm:w-auto justify-end">
                 <a 
                     href="${q.download_url}" 
                     download="ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}"
                     onclick="handleDownloadClick('ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}')"
-                    class="px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 ${btnClass} transition-all grow sm:grow-0 shadow-lg cursor-pointer text-white"
+                    class="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 ${btnClass} transition-all shadow-lg cursor-pointer text-white"
                 >
                     <i data-lucide="download" class="w-4 h-4"></i>
                     <span>Download (${q.format})</span>
                 </a>
-                ${q.direct_url ? `
-                <a 
-                    href="${q.direct_url}" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    download="Instagram_${data.id}.mp4"
-                    title="Direct Instagram Video Stream"
-                    class="px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white bg-white/10 hover:bg-white/15 border border-white/10 flex items-center gap-1.5 transition-all shadow-md"
-                >
-                    <i data-lucide="play" class="w-3.5 h-3.5 text-pink-400"></i>
-                    <span>Direct Link</span>
-                </a>
-                ` : ''}
             </div>
         `;
         qualitiesContainer.appendChild(item);
