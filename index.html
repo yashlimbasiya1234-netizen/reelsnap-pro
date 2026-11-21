@@ -100,29 +100,31 @@
         </div>
     </nav>
 
-    <!-- Top Leaderboard Ad Slot (Slot 1) -->
-    <div id="top-ad-wrapper" class="max-w-5xl mx-auto px-4 pt-4">
-        <div class="ad-slot-box p-3.5 flex flex-col md:flex-row items-center justify-between gap-3 bg-gradient-to-r from-slate-900/90 via-indigo-950/60 to-purple-950/70 border border-purple-500/30 rounded-2xl shadow-xl">
-            <span class="ad-badge bg-black/60 text-slate-300">Sponsored Ad • Google Display</span>
-            <div class="flex items-center gap-3.5 text-left">
-                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=120&auto=format&fit=crop&q=80" alt="Sponsor" class="w-12 h-12 rounded-xl object-cover shrink-0 border border-white/20 shadow-md">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h5 class="text-xs sm:text-sm font-bold text-white tracking-tight">AI Video Studio 2026 - Ultra 4K Enhancer</h5>
-                        <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-300 font-bold">Trending</span>
-                    </div>
-                    <p class="text-[11px] text-slate-300 mt-0.5">Automate viral Instagram Reels in 1-click. Free Trial available today!</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-2 w-full md:w-auto justify-end shrink-0">
-                <a href="https://google.com" target="_blank" class="text-xs px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-500 hover:to-pink-400 text-white font-bold shadow-lg transition-all">
-                    Visit Site →
-                </a>
-                <button onclick="closeAd('top-ad-wrapper')" class="text-slate-400 hover:text-slate-200 text-xs px-2 py-1">
-                    ✕
-                </button>
-            </div>
+    <!-- Side Rail Ads (Positioned neatly on sides so center downloader is completely unobstructed) -->
+    <div id="side-ad-left" class="fixed left-3 top-32 z-30 hidden 2xl:flex flex-col w-40 p-3 rounded-2xl bg-[#0b1120]/90 border border-purple-500/20 shadow-2xl backdrop-blur-md text-center">
+        <span class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mb-2">Sponsored Ad</span>
+        <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center mx-auto mb-2">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
         </div>
+        <p class="text-xs font-bold text-white mb-1">AI 4K Video</p>
+        <p class="text-[10px] text-slate-400 mb-2">Viral Reels in 1-Click</p>
+        <a href="https://reelsnap-pro.onrender.com/#ad" target="_blank" class="w-full py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-bold block transition-all">
+            Open →
+        </a>
+        <button onclick="closeAd('side-ad-left')" class="text-[10px] text-slate-500 hover:text-slate-300 mt-2">Close ✕</button>
+    </div>
+
+    <div id="side-ad-right" class="fixed right-3 top-32 z-30 hidden 2xl:flex flex-col w-40 p-3 rounded-2xl bg-[#0b1120]/90 border border-purple-500/20 shadow-2xl backdrop-blur-md text-center">
+        <span class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mb-2">Sponsored Ad</span>
+        <div class="w-10 h-10 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center mx-auto mb-2">
+            <i data-lucide="flame" class="w-5 h-5"></i>
+        </div>
+        <p class="text-xs font-bold text-white mb-1">Free Followers</p>
+        <p class="text-[10px] text-slate-400 mb-2">Grow IG Reach 10x</p>
+        <a href="https://reelsnap-pro.onrender.com/#ad" target="_blank" class="w-full py-1.5 rounded-lg bg-pink-600 hover:bg-pink-500 text-white text-[10px] font-bold block transition-all">
+            Open →
+        </a>
+        <button onclick="closeAd('side-ad-right')" class="text-[10px] text-slate-500 hover:text-slate-300 mt-2">Close ✕</button>
     </div>
 
     <!-- Main Container -->
@@ -918,6 +920,51 @@
                         <!-- Populated dynamically from /api/admin/users -->
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Complete & Sponsored Ad Modal (Triggered when video saves) -->
+    <div id="download-success-ad-modal" class="fixed inset-0 z-[100000] flex items-center justify-center p-4 modal-overlay hidden" style="background: rgba(3, 7, 18, 0.96) !important; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); z-index: 100000;">
+        <div class="p-6 sm:p-7 max-w-md w-full relative rounded-3xl border border-emerald-500/30 shadow-2xl text-center" style="background-color: #0b1120 !important; background: #0b1120 !important;">
+            <button onclick="closeDownloadSuccessModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-all z-10" title="Close">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Success Icon -->
+            <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-emerald-500/20">
+                <i data-lucide="check-circle" class="w-8 h-8"></i>
+            </div>
+
+            <h3 class="text-xl font-black brand-font text-white">Reel Downloaded & Saved!</h3>
+            <p class="text-xs text-slate-300 mt-1" id="saved-filename-text">Your video file has been saved to your device.</p>
+
+            <!-- Sponsored Ad Unit Inside Download Success Modal -->
+            <div class="my-4 p-4 rounded-2xl bg-gradient-to-r from-purple-950/60 via-indigo-950/60 to-purple-950/60 border border-purple-500/30 relative text-left">
+                <span class="ad-badge bg-black/60 text-purple-300">Sponsored Ad</span>
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">4K AI Video Enhancer 2026</h4>
+                        <p class="text-[11px] text-slate-300">Make your reels viral in seconds with 1-click AI tools.</p>
+                    </div>
+                </div>
+                <a href="https://reelsnap-pro.onrender.com/#ad" target="_blank" onclick="closeDownloadSuccessModal()" class="mt-3 block w-full py-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-xs text-center shadow-lg hover:brightness-110 transition-all">
+                    Claim Free Access →
+                </a>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-2">
+                <button onclick="closeDownloadSuccessModal(); focusDownloadInput();" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                    <span>Download Another Reel</span>
+                </button>
+                <button onclick="closeDownloadSuccessModal(); openVipModal();" class="w-full py-2 text-[11px] text-amber-400 hover:text-amber-300 font-bold transition-all">
+                    👑 Want zero ads? Get VIP Pass for ₹49 →
+                </button>
             </div>
         </div>
     </div>

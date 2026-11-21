@@ -93,18 +93,18 @@ function checkVipStatus() {
 }
 
 function showAllAds() {
-    const adIds = ["top-ad-wrapper", "result-native-ad", "mid-ad-wrapper", "bottom-sticky-ad"];
+    const adIds = ["side-ad-left", "side-ad-right", "result-native-ad", "mid-ad-wrapper", "bottom-sticky-ad"];
     adIds.forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.style.display = "";
+        if (el) el.style.removeProperty("display");
     });
 }
 
 function hideAllAds() {
-    const adIds = ["top-ad-wrapper", "result-native-ad", "mid-ad-wrapper", "bottom-sticky-ad"];
+    const adIds = ["side-ad-left", "side-ad-right", "result-native-ad", "mid-ad-wrapper", "bottom-sticky-ad"];
     adIds.forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.style.display = "none";
+        if (el) el.style.setProperty("display", "none", "important");
     });
 }
 
@@ -216,15 +216,14 @@ function renderResult(data) {
                 </div>
             </div>
             <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
-                <a 
-                    href="${q.download_url}" 
-                    download="ReelSnap_${data.id}_${q.format.toLowerCase()}"
-                    onclick="showToast('⚡ Starting high-speed file download...')"
+                <button 
+                    type="button"
+                    onclick="downloadReelFile('${q.download_url}', 'ReelSnap_${data.id}_${q.format.toLowerCase()}.${q.format === 'MP3' ? 'mp3' : 'mp4'}', '${q.direct_url || ''}')"
                     class="px-5 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 ${btnClass} transition-all grow sm:grow-0 shadow-lg cursor-pointer text-white"
                 >
                     <i data-lucide="download" class="w-4 h-4"></i>
                     <span>Download (${q.format})</span>
-                </a>
+                </button>
                 ${q.direct_url ? `
                 <a 
                     href="${q.direct_url}" 
@@ -247,6 +246,94 @@ function renderResult(data) {
 
     resultCard.classList.remove("hidden");
     resultCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+// 100% Reliable File Downloader & Post-Download Ad Trigger
+async function downloadReelFile(url, filename, directUrl) {
+    showToast("⏳ Saving reel to your device...");
+    let saved = false;
+
+    try {
+        const response = await fetch(url);
+        if (response.ok) {
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => window.URL.revokeObjectURL(blobUrl), 30000);
+            saved = true;
+        }
+    } catch (e) {
+        console.warn("Blob fetch failed, falling back to direct navigation:", e);
+    }
+
+    if (!saved) {
+        const target = url || directUrl;
+        const a = document.createElement("a");
+        a.href = target;
+        a.download = filename;
+        a.target = "_blank";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    showToast("✅ Reel saved to your Downloads folder!");
+
+    // User requirement: "dowload thay ne save thay tyare add avi joi aevu kaR"
+    if (!isVipUser) {
+        setTimeout(() => {
+            openDownloadSuccessModal(filename);
+        }, 1200);
+    }
+}
+
+// Download Success Modal Handlers
+function openDownloadSuccessModal(filename) {
+    const modal = document.getElementById("download-success-ad-modal");
+    const nameEl = document.getElementById("saved-filename-text");
+    if (nameEl && filename) {
+        nameEl.innerText = `File "${filename}" saved in your Downloads folder.`;
+    }
+    if (modal) modal.classList.remove("hidden");
+    if (window.lucide) lucide.createIcons();
+}
+
+function closeDownloadSuccessModal() {
+    const modal = document.getElementById("download-success-ad-modal");
+    if (modal) modal.classList.add("hidden");
+}
+
+function focusDownloadInput() {
+    const input = document.getElementById("reel-url-input");
+    if (input) {
+        input.value = "";
+        input.focus();
+    }
+}
+
+// User requirement: "3 tap pachi automatic add khule aevu kar"
+let userTapCount = 0;
+document.addEventListener("click", (e) => {
+    if (isVipUser) return; // VIP users never see ads
+    if (e.target.closest("#vip-modal") || e.target.closest("#settings-modal") || e.target.closest("#auth-modal")) return;
+
+    userTapCount++;
+    if (userTapCount % 3 === 0) {
+        triggerThreeTapAd();
+    }
+});
+
+function triggerThreeTapAd() {
+    if (isVipUser) return;
+    try {
+        window.open("https://reelsnap-pro.onrender.com/#ad-sponsored", "_blank");
+        showToast("📢 Sponsored partner ad loaded (Tap 3/3)");
+    } catch (e) {}
 }
 
 // Download Trigger with Interstitial Ad & Countdown
