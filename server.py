@@ -404,17 +404,49 @@ async def create_order(data: dict):
     save_orders(orders[:100])
 
     email = str(data.get("email") or data.get("contact") or "").strip().lower()
+    name = str(data.get("name") or "").strip()
+    plan = str(data.get("plan", "VIP Lifetime"))
+    now_str = time.strftime("%d-%m-%Y %I:%M:%S %p")
+
     if email:
         users = load_users()
+        user_found = False
         for u in users:
             if u.get("email") == email:
-                u["plan"] = data.get("plan", "VIP Lifetime")
-                save_users(users)
+                u["plan"] = plan
+                u["vip_active"] = True
+                u["utr"] = data.get("utr", "")
+                u["last_login"] = now_str
+                if name and not u.get("name"):
+                    u["name"] = name
+                user_found = True
                 break
+        if not user_found:
+            new_vip_user = {
+                "id": f"vip_{int(time.time())}",
+                "email": email,
+                "name": name or email.split("@")[0].capitalize(),
+                "provider": "VIP Subscription",
+                "plan": plan,
+                "utr": data.get("utr", ""),
+                "vip_active": True,
+                "created_at": now_str,
+                "last_login": now_str,
+                "downloads_count": 0
+            }
+            users.insert(0, new_vip_user)
+        save_users(users)
+
+        # Dispatch VIP Welcome Email
+        try:
+            send_welcome_email(email, name or "VIP Member", f"ReelSnap VIP ({plan})")
+        except Exception as e:
+            logger.warning(f"VIP email notification note: {e}")
+
     return {
         "success": True, 
         "order_id": new_order["id"],
-        "message": "Payment details submitted! VIP access will be verified shortly."
+        "message": f"VIP access successfully activated for {email or 'User'}!"
     }
 
 @app.get("/api/stats")

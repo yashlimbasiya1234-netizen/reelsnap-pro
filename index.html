@@ -762,22 +762,45 @@
                 </div>
 
                 <!-- UTR / Payment Proof Form -->
-                <form onsubmit="handleUpiProofSubmit(event)" class="space-y-2">
-                    <label class="block text-xs font-medium text-slate-300">Enter 12-Digit UPI Ref / UTR No. after payment:</label>
-                    <div class="flex gap-2">
+                <form onsubmit="handleUpiProofSubmit(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Your Email (to link Ad-Free VIP ID)</label>
                         <input 
-                            type="text" 
-                            id="upi-utr-input" 
-                            placeholder="e.g. 412893847291" 
-                            maxlength="20"
+                            type="email" 
+                            id="vip-email-input" 
+                            placeholder="youremail@gmail.com" 
                             required
-                            class="grow bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 font-mono focus:outline-none focus:border-amber-400"
+                            class="w-full bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
                         >
-                        <button type="submit" id="submit-utr-btn" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shrink-0 transition-all">
-                            Submit & Activate
-                        </button>
                     </div>
-                    <p class="text-[10px] text-slate-500">Instant VIP verification upon entering reference code.</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1">Your Name</label>
+                            <input 
+                                type="text" 
+                                id="vip-name-input" 
+                                placeholder="e.g. Yash" 
+                                class="w-full bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-300 mb-1">12-Digit UPI UTR No.</label>
+                            <input 
+                                type="text" 
+                                id="upi-utr-input" 
+                                placeholder="Ref / UTR No." 
+                                maxlength="20"
+                                required
+                                class="w-full bg-[#0D1322] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 font-mono focus:outline-none focus:border-amber-400"
+                            >
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-utr-btn" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs shadow-lg transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                        <span>Activate 100% Ad-Free VIP Pass →</span>
+                    </button>
+                    <p class="text-[10px] text-slate-400 text-center">🔒 Your VIP ID will be saved in database & all ads will be removed immediately.</p>
                 </form>
                 <div id="upi-order-msg" class="text-xs text-center font-medium"></div>
             </div>
@@ -899,19 +922,23 @@
         </div>
     </div>
 
-    <!-- Mandatory User Authentication Wall (Sign In / Sign Up with Google) -->
-    <div id="auth-modal" class="fixed inset-0 z-[99999] flex items-center justify-center p-4 modal-overlay" style="background: rgba(3, 7, 18, 0.98) !important; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 99999;">
-        <div class="p-6 sm:p-7 max-w-sm w-full relative rounded-3xl border border-purple-500/40 shadow-2xl" style="background-color: #0b1120 !important; background: #0b1120 !important; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 1), 0 0 40px -5px rgba(168, 85, 247, 0.3);">
+    <!-- User Authentication Modal (Optional Sign In / VIP Account) -->
+    <div id="auth-modal" onclick="if(event.target === this) closeAuthModal()" class="fixed inset-0 z-[99999] flex items-center justify-center p-4 modal-overlay hidden" style="background: rgba(3, 7, 18, 0.95) !important; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); z-index: 99999;">
+        <div class="p-6 sm:p-7 max-w-sm w-full relative rounded-3xl border border-white/10 shadow-2xl" style="background-color: #0b1120 !important; background: #0b1120 !important; box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 1), 0 0 30px -5px rgba(168, 85, 247, 0.2);">
             
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-all z-10" title="Close">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
             <div class="text-center mb-5">
                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-pink-500 text-white flex items-center justify-center mx-auto mb-2.5 shadow-lg shadow-purple-500/30">
-                    <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    <i data-lucide="crown" class="w-6 h-6 text-amber-300 fill-amber-300"></i>
                 </div>
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/15 border border-purple-500/30 text-purple-300 text-[11px] font-bold mb-2">
-                    <span>🔒 Mandatory Login Required</span>
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[11px] font-bold mb-2">
+                    <span>👑 VIP & Ad-Free Account</span>
                 </div>
-                <h3 class="text-xl font-black brand-font text-white">Welcome to ReelSnap Pro</h3>
-                <p class="text-xs text-slate-300 mt-1">Please sign in to access free 4K reel downloader</p>
+                <h3 class="text-xl font-black brand-font text-white">Sign In to ReelSnap Pro</h3>
+                <p class="text-xs text-slate-300 mt-1">Sign in to restore your VIP Ad-Free subscription</p>
             </div>
 
             <!-- Perks Pills -->

@@ -24,16 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
     renderUserAccount();
     checkVipStatus();
     initStatsTicker();
-
-    // Auto-prompt Sign In / Sign Up when website opens!
-    const user = getUserSession();
-    if (!user || !user.isLoggedIn) {
-        openAuthModal();
-        document.body.style.overflow = "hidden";
-    } else {
-        closeAuthModal();
-        document.body.style.overflow = "";
-    }
 });
 
 // Load config from backend
@@ -72,17 +62,34 @@ function applyConfig() {
 }
 
 function checkVipStatus() {
+    const user = getUserSession();
+    const isVip = Boolean(user && user.isVip && (!user.expiry || user.expiry > Date.now()));
+
     const vipContainer = document.getElementById("vip-status-container");
     if (vipContainer) {
-        vipContainer.innerHTML = `
-            <button onclick="openVipModal('Lifetime VIP', 1999)" id="vip-badge-btn" class="px-4 py-2 rounded-full text-xs font-bold bg-amber-500/15 border border-amber-500/40 hover:border-amber-400 text-amber-300 flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/10">
-                <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400 fill-amber-400"></i>
-                <span>Upgrade VIP</span>
-            </button>
-        `;
+        if (isVip) {
+            vipContainer.innerHTML = `
+                <button onclick="openSettingsModal()" class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/20 border border-amber-500/40 text-amber-300 flex items-center gap-1.5 shadow-md shadow-amber-500/10">
+                    <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400 fill-amber-400"></i>
+                    <span>👑 VIP Active (Ad-Free)</span>
+                </button>
+            `;
+        } else {
+            vipContainer.innerHTML = `
+                <button onclick="openVipModal('Lifetime VIP', 1999)" id="vip-badge-btn" class="px-4 py-2 rounded-full text-xs font-bold bg-amber-500/15 border border-amber-500/40 hover:border-amber-400 text-amber-300 flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/10">
+                    <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400 fill-amber-400"></i>
+                    <span>Upgrade VIP</span>
+                </button>
+            `;
+        }
         if (window.lucide) lucide.createIcons();
     }
-    showAllAds();
+
+    if (isVip) {
+        hideAllAds();
+    } else {
+        showAllAds();
+    }
 }
 
 function showAllAds() {
@@ -131,15 +138,6 @@ function loadSampleLink() {
 // Download form submission
 async function handleDownloadSubmit(e) {
     e.preventDefault();
-
-    // Mandatory Login Check
-    const user = getUserSession();
-    if (!user || !user.isLoggedIn) {
-        openAuthModal();
-        showToast("⚠️ રીલ ડાઉનલોડ કરવા માટે પહેલાં Sign In કરો!");
-        return;
-    }
-
     const input = document.getElementById("reel-url-input");
     const url = input.value.trim();
 
@@ -435,9 +433,19 @@ function updatePaymentQr() {
 async function handleUpiProofSubmit(e) {
     e.preventDefault();
     const utrInput = document.getElementById("upi-utr-input");
-    const utr = utrInput.value.trim();
+    const emailInput = document.getElementById("vip-email-input");
+    const nameInput = document.getElementById("vip-name-input");
     const msgEl = document.getElementById("upi-order-msg");
     const submitBtn = document.getElementById("submit-utr-btn");
+
+    const utr = utrInput ? utrInput.value.trim() : "";
+    const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
+    const name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : (email ? email.split("@")[0] : "VIP Member");
+
+    if (!email || !email.includes("@")) {
+        msgEl.innerHTML = `<span class="text-rose-400">Please enter your valid Email to link your VIP account.</span>`;
+        return;
+    }
 
     if (!utr || utr.length < 6) {
         msgEl.innerHTML = `<span class="text-rose-400">Please enter a valid 12-digit UPI UTR / Reference number.</span>`;
@@ -445,7 +453,7 @@ async function handleUpiProofSubmit(e) {
     }
 
     submitBtn.disabled = true;
-    submitBtn.innerText = "Verifying...";
+    submitBtn.innerText = "Verifying & Activating VIP...";
 
     try {
         const res = await fetch("/api/orders", {
@@ -455,35 +463,43 @@ async function handleUpiProofSubmit(e) {
                 plan: selectedPaymentPlan.name,
                 amount: selectedPaymentPlan.amount,
                 utr: utr,
-                name: "Customer",
-                contact: ""
+                email: email,
+                name: name
             })
         });
 
         const data = await res.json();
         if (data.success) {
-            const user = getUserSession();
-            user.plan = selectedPaymentPlan.name || "VIP Lifetime";
+            let expiryTime = null;
             if (selectedPaymentPlan.amount === 49) {
-                user.expiry = Date.now() + 24 * 60 * 60 * 1000; // 24 Hours
+                expiryTime = Date.now() + 24 * 60 * 60 * 1000; // 24 Hours
             } else if (selectedPaymentPlan.amount === 299) {
-                user.expiry = Date.now() + 30 * 24 * 60 * 60 * 1000; // 30 Days
-            } else {
-                user.expiry = null; // Lifetime!
+                expiryTime = Date.now() + 30 * 24 * 60 * 60 * 1000; // 30 Days
             }
-            saveUserSession(user);
 
-            msgEl.innerHTML = `<span class="text-emerald-400 font-bold">✓ Payment Received! VIP Activated.</span>`;
+            const vipUser = {
+                email: email,
+                name: name,
+                isLoggedIn: true,
+                isVip: true,
+                plan: selectedPaymentPlan.name || "VIP Lifetime",
+                expiry: expiryTime,
+                utr: utr
+            };
+            saveUserSession(vipUser);
+
+            msgEl.innerHTML = `<span class="text-emerald-400 font-bold">✓ Payment Verified! VIP ID saved in database.</span>`;
 
             if (window.confetti) {
-                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
             }
 
             setTimeout(() => {
                 closeVipModal();
                 checkVipStatus();
-                showToast("🎉 VIP Activated! Enjoy 100% ad-free 4K downloads!");
-            }, 1600);
+                renderUserAccount();
+                showToast(`🎉 VIP Active for ${email}! All ads removed permanently.`);
+            }, 1400);
         } else {
             msgEl.innerHTML = `<span class="text-rose-400">Submission failed. Try again.</span>`;
         }
@@ -491,7 +507,7 @@ async function handleUpiProofSubmit(e) {
         msgEl.innerHTML = `<span class="text-rose-400">Network error. Please try again.</span>`;
     } finally {
         submitBtn.disabled = false;
-        submitBtn.innerText = "Submit & Activate";
+        submitBtn.innerText = "Activate 100% Ad-Free VIP Pass →";
     }
 }
 
@@ -517,6 +533,8 @@ async function submitVipKey() {
         if (data.success) {
             const user = getUserSession();
             user.plan = "VIP Lifetime";
+            user.isVip = true;
+            user.isLoggedIn = true;
             user.expiry = null;
             saveUserSession(user);
 
@@ -789,11 +807,6 @@ function openAuthModal() {
 }
 
 function closeAuthModal() {
-    const user = getUserSession();
-    if (!user || !user.isLoggedIn) {
-        showToast("⚠️ સાઇટ વાપરવા માટે લોગિન કરવું ફરજિયાત છે!");
-        return; // Prevent closing without login
-    }
     const modal = document.getElementById("auth-modal");
     if (modal) {
         modal.classList.add("hidden");
